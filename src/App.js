@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [hierarchy, setHierarchy] = useState(null)
 
-  // Reusable fetch function
+  // fetch function for reuse
   const fetchHierarchy = () => {
     fetch("https://localhost:7242/api/AssetHierarchy")
       .then((res) => res.json())
@@ -15,7 +15,7 @@ function App() {
       .catch((error) => console.log(error));
   };
 
-  // Fetch only on mount
+  
   useEffect(() => {
     fetchHierarchy();
   }, []);
