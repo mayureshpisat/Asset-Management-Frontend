@@ -32,8 +32,8 @@ function Menu({ refreshHierarchy }) {
       alert("Upload failed: " + error.message);
     }
 
-    // Force reload to re-render everything
-    window.location.reload();
+    // // Force reload to re-render everything
+    // window.location.reload();
   };
 
   return (

@@ -1,5 +1,6 @@
 import React from 'react';
-import Sidebar from './Siderbar.js';
+import Siderbar from './Siderbar.js';
+import NewNode from './NewNode.js'
 import Menu from './Menu.js'
 import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,11 +26,13 @@ function App() {
     <div className="container-fluid">
       <div className="row">
         {/* Pass the hierarchy fetched to the Sidebar for tree display */}
-        <Sidebar hierarchy={hierarchy} />
+        <Siderbar hierarchy={hierarchy} />
 
         {/* Place holder for Menu */}
         <div className="col-md-9 p-3">
           <Menu refreshHierarchy={fetchHierarchy}/>
+          <NewNode refreshHierarchy={fetchHierarchy}/>
+
         </div>
       </div>
     </div>
