@@ -29,7 +29,7 @@ function NewNode({ refreshHierarchy }) {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(errorText);
+        alert(errorText)
       }
 
       // alert("Node added successfully!");
