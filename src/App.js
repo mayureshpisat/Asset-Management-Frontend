@@ -1,3 +1,4 @@
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import React from 'react';
 import Siderbar from './Siderbar.js';
 import NewNode from './NewNode.js'
@@ -26,7 +27,7 @@ function App() {
     <div className="container-fluid">
       <div className="row">
         {/* Pass the hierarchy fetched to the Sidebar for tree display */}
-        <Siderbar hierarchy={hierarchy} />
+        <Siderbar hierarchy={hierarchy} refreshHierarchy={fetchHierarchy} />
 
         {/* Place holder for Menu */}
         <div className="col-md-9 p-3">

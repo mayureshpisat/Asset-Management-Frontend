@@ -1,0 +1,584 @@
+{
+  "id": "factory-main",
+  "name": "Global Manufacturing Complex",
+  "children": [
+    {
+      "id": "building-a",
+      "name": "Production Building A",
+      "children": [
+        {
+          "id": "floor-a1",
+          "name": "Floor 1 - Assembly Line",
+          "children": [
+            {
+              "id": "line-a1-automotive",
+              "name": "Automotive Assembly Line",
+              "children": [
+                {
+                  "id": "station-welding-001",
+                  "name": "Welding Station 1",
+                  "children": [
+                    {
+                      "id": "welder-robot-001",
+                      "name": "Industrial Robot Welder",
+                      "children": []
+                    },
+                    {
+                      "id": "welding-torch-001",
+                      "name": "Plasma Welding Torch",
+                      "children": []
+                    },
+                    {
+                      "id": "cooling-system-001",
+                      "name": "Welding Cooling System",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "station-painting-001",
+                  "name": "Painting Station 1",
+                  "children": [
+                    {
+                      "id": "spray-booth-001",
+                      "name": "Automated Spray Booth",
+                      "children": []
+                    },
+                    {
+                      "id": "paint-mixer-001",
+                      "name": "Paint Mixing System",
+                      "children": []
+                    },
+                    {
+                      "id": "ventilation-001",
+                      "name": "Booth Ventilation System",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "station-assembly-001",
+                  "name": "Final Assembly Station",
+                  "children": [
+                    {
+                      "id": "conveyor-main-001",
+                      "name": "Main Conveyor Belt",
+                      "children": []
+                    },
+                    {
+                      "id": "lift-hydraulic-001",
+                      "name": "Hydraulic Vehicle Lift",
+                      "children": []
+                    },
+                    {
+                      "id": "tools-pneumatic-001",
+                      "name": "Pneumatic Tool Set",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "line-a1-electronics",
+              "name": "Electronics Assembly Line",
+              "children": [
+                {
+                  "id": "smt-line-001",
+                  "name": "Surface Mount Technology Line",
+                  "children": [
+                    {
+                      "id": "pick-place-001",
+                      "name": "Pick and Place Machine 1",
+                      "children": []
+                    },
+                    {
+                      "id": "pick-place-002",
+                      "name": "Pick and Place Machine 2",
+                      "children": []
+                    },
+                    {
+                      "id": "reflow-oven-001",
+                      "name": "Reflow Soldering Oven",
+                      "children": []
+                    },
+                    {
+                      "id": "aoi-machine-001",
+                      "name": "Automated Optical Inspection",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "testing-station-001",
+                  "name": "Electronic Testing Station",
+                  "children": [
+                    {
+                      "id": "ict-tester-001",
+                      "name": "In-Circuit Tester",
+                      "children": []
+                    },
+                    {
+                      "id": "functional-test-001",
+                      "name": "Functional Test Equipment",
+                      "children": []
+                    },
+                    {
+                      "id": "burn-in-chamber-001",
+                      "name": "Burn-in Test Chamber",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "floor-a2",
+          "name": "Floor 2 - Heavy Machinery",
+          "children": [
+            {
+              "id": "machining-center-001",
+              "name": "CNC Machining Center 1",
+              "children": [
+                {
+                  "id": "cnc-mill-001",
+                  "name": "5-Axis CNC Milling Machine",
+                  "children": [
+                    {
+                      "id": "spindle-main-001",
+                      "name": "Main Spindle Assembly",
+                      "children": []
+                    },
+                    {
+                      "id": "tool-changer-001",
+                      "name": "Automatic Tool Changer",
+                      "children": []
+                    },
+                    {
+                      "id": "coolant-system-001",
+                      "name": "Coolant Circulation System",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cnc-lathe-001",
+                  "name": "CNC Turning Lathe",
+                  "children": [
+                    {
+                      "id": "chuck-hydraulic-001",
+                      "name": "Hydraulic Chuck",
+                      "children": []
+                    },
+                    {
+                      "id": "tailstock-001",
+                      "name": "Programmable Tailstock",
+                      "children": []
+                    },
+                    {
+                      "id": "chip-conveyor-001",
+                      "name": "Chip Removal Conveyor",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "grinding-section-001",
+              "name": "Precision Grinding Section",
+              "children": [
+                {
+                  "id": "surface-grinder-001",
+                  "name": "Surface Grinding Machine",
+                  "children": [
+                    {
+                      "id": "grinding-wheel-001",
+                      "name": "Diamond Grinding Wheel",
+                      "children": []
+                    },
+                    {
+                      "id": "magnetic-chuck-001",
+                      "name": "Electromagnetic Chuck",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "cylindrical-grinder-001",
+                  "name": "Cylindrical Grinding Machine",
+                  "children": [
+                    {
+                      "id": "headstock-001",
+                      "name": "Grinding Headstock",
+                      "children": []
+                    },
+                    {
+                      "id": "grinding-wheel-002",
+                      "name": "CBN Grinding Wheel",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "building-b",
+      "name": "Production Building B",
+      "children": [
+        {
+          "id": "warehouse-section",
+          "name": "Automated Warehouse",
+          "children": [
+            {
+              "id": "storage-rack-001",
+              "name": "High-Bay Storage Rack A",
+              "children": [
+                {
+                  "id": "agv-001",
+                  "name": "Automated Guided Vehicle 1",
+                  "children": []
+                },
+                {
+                  "id": "agv-002",
+                  "name": "Automated Guided Vehicle 2",
+                  "children": []
+                },
+                {
+                  "id": "crane-overhead-001",
+                  "name": "Overhead Bridge Crane",
+                  "children": [
+                    {
+                      "id": "crane-hoist-001",
+                      "name": "Electric Chain Hoist",
+                      "children": []
+                    },
+                    {
+                      "id": "crane-trolley-001",
+                      "name": "Crane Trolley System",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "sorting-system-001",
+              "name": "Automated Sorting System",
+              "children": [
+                {
+                  "id": "conveyor-sorting-001",
+                  "name": "Sorting Conveyor Belt",
+                  "children": []
+                },
+                {
+                  "id": "barcode-scanner-001",
+                  "name": "Industrial Barcode Scanner",
+                  "children": []
+                },
+                {
+                  "id": "diverter-001",
+                  "name": "Package Diverter System",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "quality-control",
+          "name": "Quality Control Department",
+          "children": [
+            {
+              "id": "measurement-lab-001",
+              "name": "Precision Measurement Lab",
+              "children": [
+                {
+                  "id": "cmm-001",
+                  "name": "Coordinate Measuring Machine",
+                  "children": [
+                    {
+                      "id": "probe-head-001",
+                      "name": "Touch Probe Head",
+                      "children": []
+                    },
+                    {
+                      "id": "granite-table-001",
+                      "name": "Granite Surface Plate",
+                      "children": []
+                    }
+                  ]
+                },
+                {
+                  "id": "optical-comparator-001",
+                  "name": "Optical Comparator",
+                  "children": []
+                },
+                {
+                  "id": "hardness-tester-001",
+                  "name": "Rockwell Hardness Tester",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "testing-lab-001",
+              "name": "Material Testing Laboratory",
+              "children": [
+                {
+                  "id": "tensile-tester-001",
+                  "name": "Universal Testing Machine",
+                  "children": []
+                },
+                {
+                  "id": "spectrometer-001",
+                  "name": "X-Ray Fluorescence Spectrometer",
+                  "children": []
+                },
+                {
+                  "id": "microscope-001",
+                  "name": "Metallurgical Microscope",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "building-c",
+      "name": "Utilities & Infrastructure",
+      "children": [
+        {
+          "id": "power-systems",
+          "name": "Electrical Power Systems",
+          "children": [
+            {
+              "id": "main-transformer-001",
+              "name": "Main Power Transformer",
+              "children": [
+                {
+                  "id": "cooling-radiator-001",
+                  "name": "Oil Cooling Radiator",
+                  "children": []
+                },
+                {
+                  "id": "tap-changer-001",
+                  "name": "Load Tap Changer",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "switchgear-001",
+              "name": "High Voltage Switchgear",
+              "children": [
+                {
+                  "id": "circuit-breaker-001",
+                  "name": "SF6 Circuit Breaker",
+                  "children": []
+                },
+                {
+                  "id": "protection-relay-001",
+                  "name": "Digital Protection Relay",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "ups-system-001",
+              "name": "Uninterruptible Power Supply",
+              "children": [
+                {
+                  "id": "battery-bank-001",
+                  "name": "UPS Battery Bank",
+                  "children": []
+                },
+                {
+                  "id": "inverter-001",
+                  "name": "Power Inverter Module",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hvac-systems",
+          "name": "HVAC Climate Control",
+          "children": [
+            {
+              "id": "chiller-001",
+              "name": "Industrial Water Chiller",
+              "children": [
+                {
+                  "id": "compressor-001",
+                  "name": "Centrifugal Compressor",
+                  "children": []
+                },
+                {
+                  "id": "condenser-001",
+                  "name": "Water-Cooled Condenser",
+                  "children": []
+                },
+                {
+                  "id": "evaporator-001",
+                  "name": "Shell and Tube Evaporator",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "air-handler-001",
+              "name": "Central Air Handling Unit",
+              "children": [
+                {
+                  "id": "supply-fan-001",
+                  "name": "Supply Air Fan",
+                  "children": []
+                },
+                {
+                  "id": "return-fan-001",
+                  "name": "Return Air Fan",
+                  "children": []
+                },
+                {
+                  "id": "heat-exchanger-001",
+                  "name": "Air-to-Air Heat Exchanger",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "compressed-air",
+          "name": "Compressed Air System",
+          "children": [
+            {
+              "id": "compressor-screw-001",
+              "name": "Rotary Screw Air Compressor",
+              "children": [
+                {
+                  "id": "air-dryer-001",
+                  "name": "Refrigerated Air Dryer",
+                  "children": []
+                },
+                {
+                  "id": "receiver-tank-001",
+                  "name": "Air Receiver Tank",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "distribution-system-001",
+              "name": "Air Distribution Network",
+              "children": [
+                {
+                  "id": "filter-001",
+                  "name": "Coalescing Filter",
+                  "children": []
+                },
+                {
+                  "id": "pressure-regulator-001",
+                  "name": "Pressure Regulator",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "building-d",
+      "name": "Research & Development Center",
+      "children": [
+        {
+          "id": "prototype-lab-001",
+          "name": "Prototype Development Lab",
+          "children": [
+            {
+              "id": "3d-printer-001",
+              "name": "Industrial 3D Printer - Metal",
+              "children": [
+                {
+                  "id": "laser-system-001",
+                  "name": "Selective Laser Melting System",
+                  "children": []
+                },
+                {
+                  "id": "powder-handling-001",
+                  "name": "Metal Powder Handling Unit",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "3d-printer-002",
+              "name": "Industrial 3D Printer - Polymer",
+              "children": [
+                {
+                  "id": "extruder-001",
+                  "name": "High-Temp Extruder",
+                  "children": []
+                },
+                {
+                  "id": "build-chamber-001",
+                  "name": "Heated Build Chamber",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "testing-chamber-001",
+          "name": "Environmental Testing Chamber",
+          "children": [
+            {
+              "id": "thermal-chamber-001",
+              "name": "Temperature Cycling Chamber",
+              "children": [
+                {
+                  "id": "heating-element-001",
+                  "name": "Ceramic Heating Elements",
+                  "children": []
+                },
+                {
+                  "id": "cooling-coil-001",
+                  "name": "Liquid Nitrogen Cooling Coils",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "vibration-table-001",
+              "name": "Vibration Test Table",
+              "children": [
+                {
+                  "id": "shaker-001",
+                  "name": "Electrodynamic Shaker",
+                  "children": []
+                },
+                {
+                  "id": "amplifier-001",
+                  "name": "Power Amplifier",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

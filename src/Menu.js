@@ -1,4 +1,6 @@
 import React from "react";
+import Download from "./Download";
+
 
 function Menu({ refreshHierarchy }) {
   const handleFileChange = async (e) => {
@@ -48,6 +50,7 @@ function Menu({ refreshHierarchy }) {
         className="form-control"
         onChange={handleFileChange}
       />
+      <div><Download/></div>
     </div>
   );
 }

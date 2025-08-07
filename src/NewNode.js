@@ -1,18 +1,22 @@
 import React, { useState } from "react";
 
-function NewNode({refreshHierarchy}) {
-  const [id, setId] = useState("");
-  const [name, setName] = useState("");
-  const [parentId, setParentId] = useState("");
+function NewNode({ refreshHierarchy }) {
+  const [formData, setFormData] = useState({
+    id: "",
+    name: "",
+    parentId: ""
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const newNode = {
-      id: id,
-      name: name,
-      parentId: parentId,
-    };
 
     try {
       const response = await fetch("https://localhost:7242/api/AssetHierarchy", {
@@ -20,27 +24,30 @@ function NewNode({refreshHierarchy}) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(newNode)
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(errorText);
       }
+
+      // alert("Node added successfully!");
       
-      alert("New node added successfully!");
+      // Clear form
+      setFormData({
+        id: "",
+        name: "",
+        parentId: ""
+      });
+      
+      // Refresh the hierarchy
       refreshHierarchy();
+      
     } catch (error) {
       console.error("Error adding node:", error);
       alert("Failed to add node: " + error.message);
     }
-
-    // Optional: Clear the form
-    setId("");
-    setName("");
-    setParentId("");
-
-    // Force reload to refresh the tree fully (same as Menu)
   };
 
   return (
@@ -51,10 +58,10 @@ function NewNode({refreshHierarchy}) {
           <label className="form-label">Node ID</label>
           <input
             type="text"
-            id="nodeId"
+            name="id"
             className="form-control"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
+            value={formData.id}
+            onChange={handleInputChange}
             required
           />
         </div>
@@ -63,10 +70,10 @@ function NewNode({refreshHierarchy}) {
           <label className="form-label">Node Name</label>
           <input
             type="text"
-            id="nodeName"
+            name="name"
             className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleInputChange}
             required
           />
         </div>
@@ -75,10 +82,10 @@ function NewNode({refreshHierarchy}) {
           <label className="form-label">Parent ID</label>
           <input
             type="text"
-            id="parentId"
+            name="parentId"
             className="form-control"
-            value={parentId}
-            onChange={(e) => setParentId(e.target.value)}
+            value={formData.parentId}
+            onChange={handleInputChange}
             required
           />
         </div>
