@@ -1,13 +1,12 @@
 import React from "react";
 import Download from "./Download";
 
-
 function Menu({ refreshHierarchy }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
     if (!file) {
-      alert("Please select a file.");
+      setErrorMessage("Please select a file.");
       return;
     }
 
@@ -26,31 +25,74 @@ function Menu({ refreshHierarchy }) {
       }
 
       const message = await response.text();
-      alert("Upload successful: " + message);
-      //refresh to re render the asset tree
+      setSuccessMessage("✅ Upload successful: " + message);
       refreshHierarchy();
     } catch (error) {
-      console.error("Upload error:", error);
-      alert("Upload failed: " + error.message);
+      setErrorMessage("❌ Upload failed: " + error.message);
     }
-
-    // // Force reload to re-render everything
-    // window.location.reload();
   };
 
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [successMessage, setSuccessMessage] = React.useState("");
+
   return (
-    <div className="bg-white shadow-sm p-4 rounded">
-      <h3 className="text-secondary mb-3">Upload Asset Hierarchy</h3>
-      <label htmlFor="upload_tree" className="form-label">Select JSON File</label>
+    <div
+      className="shadow p-4 rounded"
+      style={{
+        backgroundColor: "#f9fbfd",
+        border: "1px solid #e0e6ed",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+      }}
+    >
+      <h3
+        className="fw-bold mb-3"
+        style={{ color: "#0d6efd", letterSpacing: "0.5px" }}
+      >
+        Upload Asset Hierarchy
+      </h3>
+
+      <label
+        htmlFor="upload_tree"
+        className="form-label fw-semibold"
+        style={{ color: "#495057" }}
+      >
+        Select JSON File
+      </label>
+
       <input
         type="file"
         accept="application/json"
         name="upload_tree"
         id="upload_tree"
-        className="form-control"
+        className="form-control mb-3"
         onChange={handleFileChange}
+        style={{
+          borderColor: "#ced4da",
+          cursor: "pointer",
+        }}
       />
-      <div><Download/></div>
+
+      {errorMessage && (
+        <div
+          className="alert alert-danger py-2"
+          style={{ fontSize: "0.9rem" }}
+        >
+          {errorMessage}
+        </div>
+      )}
+
+      {successMessage && (
+        <div
+          className="alert alert-success py-2"
+          style={{ fontSize: "0.9rem" }}
+        >
+          {successMessage}
+        </div>
+      )}
+
+      <div className="mt-3">
+        <Download />
+      </div>
     </div>
   );
 }
