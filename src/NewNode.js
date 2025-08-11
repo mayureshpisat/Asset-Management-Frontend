@@ -7,6 +7,8 @@ function NewNode({ refreshHierarchy }) {
     parentId: ""
   });
 
+  const [error, setError] = useState("");
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -29,12 +31,12 @@ function NewNode({ refreshHierarchy }) {
 
       if (!response.ok) {
         const errorText = await response.text();
-        alert(errorText)
+        setError(errorText);
+        return;
       }
 
-      // alert("Node added successfully!");
-      
-      // Clear form
+      // Clear error and form on success
+      setError("");
       setFormData({
         id: "",
         name: "",
@@ -46,13 +48,14 @@ function NewNode({ refreshHierarchy }) {
       
     } catch (error) {
       console.error("Error adding node:", error);
-      alert("Failed to add node: " + error.message);
+      setError("Failed to add node: " + error.message);
     }
   };
 
   return (
-    <div className="bg-white shadow-sm p-4 rounded mt-4">
+    <div className=" bg-white shadow-sm p-4 rounded mt-4">
       <h3 className="text-secondary mb-3">Add New Asset Node</h3>
+      {error && <p className="small text-danger mb-3">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label className="form-label">Node ID</label>
@@ -62,8 +65,10 @@ function NewNode({ refreshHierarchy }) {
             className="form-control"
             value={formData.id}
             onChange={handleInputChange}
+            maxLength={30}
             required
           />
+          <p className="small text-secondary">{formData.id.length}/30</p>
         </div>
 
         <div className="mb-3">
@@ -74,8 +79,10 @@ function NewNode({ refreshHierarchy }) {
             className="form-control"
             value={formData.name}
             onChange={handleInputChange}
+            maxLength={30}
             required
           />
+          <p className="small text-secondary">{formData.name.length}/30</p>
         </div>
 
         <div className="mb-3">

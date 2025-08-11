@@ -1,15 +1,17 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Siderbar from './Siderbar.js';
-import NewNode from './NewNode.js'
-import Menu from './Menu.js'
-import { useState, useEffect } from 'react';
+import NewNode from './NewNode.js';
+import Menu from './Menu.js';
+import MergeHierarchy from './MergeHierarchy.js';
+import LogsButton from './LogsButton.js';
+import LogsPage from './LogsPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const [hierarchy, setHierarchy] = useState(null)
+  const [hierarchy, setHierarchy] = useState(null);
 
-  // fetch function for reuse
   const fetchHierarchy = () => {
     fetch("https://localhost:7242/api/AssetHierarchy")
       .then((res) => res.json())
@@ -17,26 +19,32 @@ function App() {
       .catch((error) => console.log(error));
   };
 
-  
   useEffect(() => {
     fetchHierarchy();
   }, []);
 
-
   return (
-    <div className="container-fluid">
-      <div className="row">
-        {/* Pass the hierarchy fetched to the Sidebar for tree display */}
-        <Siderbar hierarchy={hierarchy} refreshHierarchy={fetchHierarchy} />
-
-        {/* Place holder for Menu */}
-        <div className="col-md-9 p-3">
-          <Menu refreshHierarchy={fetchHierarchy}/>
-          <NewNode refreshHierarchy={fetchHierarchy}/>
-
-        </div>
-      </div>
-    </div>
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div className="container-fluid">
+              <div className="row">
+                <Siderbar hierarchy={hierarchy} refreshHierarchy={fetchHierarchy} />
+                <div className="col-md-9 p-3">
+                  <Menu refreshHierarchy={fetchHierarchy} />
+                  <MergeHierarchy refreshHierarchy={fetchHierarchy} />
+                  <NewNode refreshHierarchy={fetchHierarchy} />
+                  <LogsButton refreshHierarchy={fetchHierarchy} />
+                </div>
+              </div>
+            </div>
+          }
+        />
+        <Route path="/logs" element={<LogsPage />} />
+      </Routes>
+    </Router>
   );
 }
 
