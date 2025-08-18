@@ -14,9 +14,19 @@ function App() {
 
   const fetchHierarchy = () => {
     fetch("https://localhost:7242/api/AssetHierarchy")
-      .then((res) => res.json())
-      .then((data) => setHierarchy(data))
+      .then((res) => {
+      if (!res.ok) {
+        // If no hierarchy present
+        setHierarchy(null);
+        return null;
+      }
+      return res.json();
+    })
+      .then((data) => {setHierarchy(data)
+
+      })
       .catch((error) => console.log(error));
+      
   };
 
   useEffect(() => {

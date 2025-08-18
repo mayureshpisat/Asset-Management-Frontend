@@ -5,10 +5,7 @@ function Menu({ refreshHierarchy }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
-    if (!file) {
-      setErrorMessage("Please select a file.");
-      return;
-    }
+
 
     const formData = new FormData();
     formData.append("file", file);
@@ -28,12 +25,17 @@ function Menu({ refreshHierarchy }) {
       setSuccessMessage("✅ Upload successful: " + message);
       refreshHierarchy();
     } catch (error) {
-      setErrorMessage("❌ Upload failed: " + error.message);
+      console.log(error)
     }
   };
 
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
+
+  setTimeout(()=>setSuccessMessage(""), 5000);
+  setTimeout(()=>setErrorMessage(""), 5000);
+
+
 
   return (
     <div

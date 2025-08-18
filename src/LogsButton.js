@@ -6,7 +6,7 @@ function LogsButton({ refreshHierarchy }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    refreshHierarchy(); // optional refresh
+    refreshHierarchy(); 
     navigate('/logs');
   };
 
