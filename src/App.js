@@ -11,6 +11,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [hierarchy, setHierarchy] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  console.log(searchTerm);
 
   const fetchHierarchy = () => {
     fetch("https://localhost:7242/api/AssetHierarchy")
@@ -41,7 +44,12 @@ function App() {
           element={
             <div className="container-fluid">
               <div className="row">
-                <Siderbar hierarchy={hierarchy} refreshHierarchy={fetchHierarchy} />
+                <Siderbar
+                  hierarchy={hierarchy}
+                  refreshHierarchy={fetchHierarchy}
+                  searchTerm={searchTerm}
+                  setSearchTerm={setSearchTerm}
+               />
                 <div className="col-md-9 p-3">
                   <Menu refreshHierarchy={fetchHierarchy} />
                   <MergeHierarchy refreshHierarchy={fetchHierarchy} />
