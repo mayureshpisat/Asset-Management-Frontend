@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AssetNode from './AssetNode';
+import { typeImplementation } from '@testing-library/user-event/dist/type/typeImplementation';
 
 function filterTree(node, term) {
   if (!term || term.trim() === "") {
@@ -24,12 +25,14 @@ function filterTree(node, term) {
   return null; // prune branch
 }
 
-function Siderbar({ hierarchy, refreshHierarchy, searchTerm, setSearchTerm }) {
+function Siderbar({ hierarchy,totalAssets,fetchTotalAssets, refreshHierarchy, searchTerm, setSearchTerm }) {
   const filteredHierarchy = hierarchy && filterTree(hierarchy, searchTerm);
-
+  useEffect(()=>{
+    fetchTotalAssets();
+  },);
   return (
     <div className="col-md-3 border-end p-3 bg-light shadow-sm">
-      <h4 className="text-primary border-bottom pb-2 mb-3">Asset Hierarchy</h4>
+      <h4 className="text-primary border-bottom pb-2 mb-3">Asset Hierarchy <p className='fs-6'>Total Assets: {totalAssets}</p></h4> 
 
       {/* 🔎 Search box */}
       <div className="mb-3">

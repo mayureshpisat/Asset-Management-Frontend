@@ -12,8 +12,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   const [hierarchy, setHierarchy] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalAssets, setTotalAssets] = useState(0);
 
   console.log(searchTerm);
+  //Get total number of assets
+  const fetchTotalAssets = () =>{
+    fetch("https://localhost:7242/api/AssetHierarchy/TotalAssets").then((res)=>{
+      if (!res.ok){
+        setTotalAssets(0)
+      }
+      return res.json()
+    }).then((data)=>{
+      setTotalAssets(data)
+    }).catch((error)=>{
+      console.log(error)
+    })
+  }
 
   const fetchHierarchy = () => {
     fetch("https://localhost:7242/api/AssetHierarchy")
@@ -26,7 +40,6 @@ function App() {
       return res.json();
     })
       .then((data) => {setHierarchy(data)
-
       })
       .catch((error) => console.log(error));
       
@@ -45,6 +58,8 @@ function App() {
             <div className="container-fluid">
               <div className="row">
                 <Siderbar
+                  totalAssets = {totalAssets}
+                  fetchTotalAssets = {fetchTotalAssets}
                   hierarchy={hierarchy}
                   refreshHierarchy={fetchHierarchy}
                   searchTerm={searchTerm}
