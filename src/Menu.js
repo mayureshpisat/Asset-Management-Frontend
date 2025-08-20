@@ -18,7 +18,8 @@ function Menu({ refreshHierarchy }) {
 
       if (!response.ok) {
         const errMsg = await response.text();
-        throw new Error(errMsg);
+        setErrorMessage("Error ❌: " + errMsg);
+        console.log(errMsg)
       }
 
       const message = await response.text();
@@ -32,8 +33,8 @@ function Menu({ refreshHierarchy }) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
 
-  setTimeout(()=>setSuccessMessage(""), 5000);
-  setTimeout(()=>setErrorMessage(""), 5000);
+  setTimeout(()=>setSuccessMessage(""), 8000);
+  setTimeout(()=>setErrorMessage(""), 8000);
 
 
 
