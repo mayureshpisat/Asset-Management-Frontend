@@ -13,7 +13,7 @@ function LogsButton({ refreshHierarchy }) {
   return (
     <div className="mt-3">
       <button className='btn btn-primary' onClick={handleClick}>
-          VIew Import Logs
+          View Import Logs
       </button>
     </div>
   );

@@ -48,15 +48,20 @@ function MergeHierarchy({ refreshHierarchy }) {
   };
 
   return (
-    <div className=" shadow p-4 rounded mt-2" style={{
+    <div className=" shadow-sm p-3 rounded mb-3" style={{
         backgroundColor: "#f9fbfd",
         border: "1px solid #e0e6ed",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       }}>
-      <h3 className=" mb-3 fw-bold" style={{ color: "#0d6efd", letterSpacing: "0.5px" }} >Merge Asset Hierarchy</h3>
+      <h5 className=" mb-3 fw-bold" style={{ color: "#0d6efd", letterSpacing: "0.5px" }} >
+        <i className="bi bi-sign-merge-left me-2"></i>
+
+         Merge Asset Hierarchy
+         </h5>
       
       {/* File input */}
-      <label htmlFor="upload_tree" className="form-label fw-semibold">
+      <label htmlFor="upload_tree" className="form-label fw-semibold" style={{ color: "#495057" }}>
+        
         Select JSON File
       </label>
       <input

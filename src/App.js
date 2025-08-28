@@ -57,19 +57,27 @@ function App() {
           element={
             <div className="container-fluid">
               <div className="row">
-                <Siderbar
-                  totalAssets = {totalAssets}
-                  fetchTotalAssets = {fetchTotalAssets}
-                  hierarchy={hierarchy}
-                  refreshHierarchy={fetchHierarchy}
-                  searchTerm={searchTerm}
-                  setSearchTerm={setSearchTerm}
-               />
-                <div className="col-md-9 p-3">
+                {/* Main Hierarchy Section - Center */}
+                <div className="col-md-8 p-3">
+                  <Siderbar
+                    totalAssets = {totalAssets}
+                    fetchTotalAssets = {fetchTotalAssets}
+                    hierarchy={hierarchy}
+                    refreshHierarchy={fetchHierarchy}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                  />
+                </div>
+                
+                {/* Sidebar with Upload/Download - Right */}
+                <div className="col-md-4 p-3 border-start bg-light">
                   <Menu refreshHierarchy={fetchHierarchy} />
-                  <MergeHierarchy refreshHierarchy={fetchHierarchy} />
-                  <NewNode refreshHierarchy={fetchHierarchy} />
-                  <LogsButton refreshHierarchy={fetchHierarchy} />
+                  <div className="mt-3">
+                    <MergeHierarchy refreshHierarchy={fetchHierarchy} />
+                  </div>
+                  <div className="mt-3">
+                    <LogsButton refreshHierarchy={fetchHierarchy} />
+                  </div>
                 </div>
               </div>
             </div>

@@ -5,8 +5,6 @@ function Menu({ refreshHierarchy }) {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
-
-
     const formData = new FormData();
     formData.append("file", file);
 
@@ -33,30 +31,29 @@ function Menu({ refreshHierarchy }) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
 
-  setTimeout(()=>setSuccessMessage(""), 8000);
-  setTimeout(()=>setErrorMessage(""), 8000);
-
-
+  setTimeout(()=>setSuccessMessage(""), 4000);
+  setTimeout(()=>setErrorMessage(""), 4000);
 
   return (
     <div
-      className="shadow p-4 rounded"
+      className="shadow-sm p-3 rounded mb-3"
       style={{
         backgroundColor: "#f9fbfd",
         border: "1px solid #e0e6ed",
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       }}
     >
-      <h3
-        className="fw-bold mb-3"
-        style={{ color: "#0d6efd", letterSpacing: "0.5px" }}
+      <h5
+        className="fw-bold mb-3 text-primary"
+        style={{ letterSpacing: "0.5px" }}
       >
-        Upload Asset Hierarchy
-      </h3>
+        <i className="bi bi-upload me-2"></i>
+        Upload Hierarchy
+      </h5>
 
       <label
         htmlFor="upload_tree"
-        className="form-label fw-semibold"
+        className="form-label fw-semibold small"
         style={{ color: "#495057" }}
       >
         Select JSON File
@@ -67,7 +64,7 @@ function Menu({ refreshHierarchy }) {
         accept="application/json"
         name="upload_tree"
         id="upload_tree"
-        className="form-control mb-3"
+        className="form-control form-control-sm mb-3"
         onChange={handleFileChange}
         style={{
           borderColor: "#ced4da",
@@ -77,8 +74,8 @@ function Menu({ refreshHierarchy }) {
 
       {errorMessage && (
         <div
-          className="alert alert-danger py-2"
-          style={{ fontSize: "0.9rem" }}
+          className="alert alert-danger py-1 small"
+          style={{ fontSize: "0.8rem" }}
         >
           {errorMessage}
         </div>
@@ -86,14 +83,14 @@ function Menu({ refreshHierarchy }) {
 
       {successMessage && (
         <div
-          className="alert alert-success py-2"
-          style={{ fontSize: "0.9rem" }}
+          className="alert alert-success py-1 small"
+          style={{ fontSize: "0.8rem" }}
         >
           {successMessage}
         </div>
       )}
 
-      <div className="mt-3">
+      <div className="mt-2">
         <Download />
       </div>
     </div>
