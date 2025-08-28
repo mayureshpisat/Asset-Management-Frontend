@@ -63,13 +63,44 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     setErrorMessage('');
   };
 
+  // Function to auto-generate ID from name
+  const generateIdFromName = (name) => {
+    if (!name) return '';
+    
+    // Convert to lowercase, replace spaces with hyphens, remove invalid chars
+    let id = name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')  // Replace spaces with hyphens
+      .replace(/[^a-zA-Z0-9_-]/g, '')  // Remove invalid characters
+      .substring(0, 25);  // Leave room for timestamp suffix
+    
+    // Add timestamp suffix to ensure uniqueness
+    const timestamp = Date.now().toString().slice(-5);  // Last 5 digits of timestamp
+    id = `${id}_${timestamp}`;
+    
+    // Ensure it doesn't exceed 30 characters
+    return id.substring(0, 30);
+  };
+
   // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    if (name === 'name') {
+      // Auto-generate ID when name changes
+      const generatedId = generateIdFromName(value);
+      setFormData(prev => ({
+        ...prev,
+        name: value,
+        id: generatedId
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
   // Handle form submission
@@ -271,24 +302,9 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
                 <div className="modal-body">
                   <div className="mb-3">
                     <label className="form-label fw-semibold text-muted">
+                      <i className="bi bi-diagram-3 me-1"></i>
                       Parent: {node.name}
                     </label>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label htmlFor="childId" className="form-label fw-semibold">
-                      Child ID <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="childId"
-                      name="id"
-                      value={formData.id}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter unique child ID"
-                    />
                   </div>
                   
                   <div className="mb-3">
@@ -304,7 +320,30 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
                       onChange={handleInputChange}
                       required
                       placeholder="Enter child node name"
+                      maxLength="30"
                     />
+                    <small className="text-muted">
+                      Only letters, numbers, and spaces allowed (max 30 characters)
+                    </small>
+                  </div>
+                  
+                  <div className="mb-3">
+                    <label htmlFor="childId" className="form-label fw-semibold text-muted">
+                      Generated ID <span className="text-info">(Auto-generated)</span>
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control bg-light"
+                      id="childId"
+                      name="id"
+                      value={formData.id}
+                      readOnly
+                      placeholder="ID will be auto-generated from name"
+                    />
+                    <small className="text-muted">
+                      <i className="bi bi-info-circle me-1"></i>
+                      ID is automatically created from the name you enter
+                    </small>
                   </div>
                   
                   {errorMessage && (
