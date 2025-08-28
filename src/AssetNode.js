@@ -77,6 +77,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     
     // Add timestamp suffix to ensure uniqueness
     const timestamp = Date.now().toString().slice(-5);  // Last 5 digits of timestamp
+    console.log("Time Stamp now: " +timestamp)
     id = `${id}_${timestamp}`;
     
     // Ensure it doesn't exceed 30 characters
@@ -126,7 +127,9 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
       // Success
       setShowModal(false);
       refreshHierarchy();
-      alert("Child node added successfully!");
+      
+
+      
     } catch (error) {
       console.error("Add child failed:", error);
       setErrorMessage("Failed to add child: " + error.message);
