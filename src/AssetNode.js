@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AssetNode({ node, refreshHierarchy, searchTerm }) {
+  const navigate = useNavigate();
+  
   // Auto-expand nodes that have search results or matching descendants
   const shouldAutoExpand = searchTerm && (node.isSearchResult || node.hasMatchingDescendant);
   const [expanded, setExpanded] = useState(shouldAutoExpand || true);
@@ -63,7 +66,10 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     setErrorMessage('');
   };
 
-
+  // Handle navigate to signals
+  const handleViewSignals = () => {
+    navigate(`/signals/${node.id}`);
+  };
 
   // Handle form input changes
   const handleInputChange = (e) => {
@@ -195,6 +201,25 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
               Match
             </span>
           )}
+          
+          {/* Signal Button */}
+          <span 
+            className="bi bi-broadcast ms-2"  
+            style={{
+              color: "#28a745",
+              cursor: 'pointer',
+              opacity: '0.2',
+              fontSize: '14px',
+              userSelect: 'none'
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleViewSignals();
+            }}
+            title={`View Signals for: ${node.name}`}
+            onMouseEnter={(e) => e.target.style.opacity = '1'}
+            onMouseLeave={(e) => e.target.style.opacity = '0.2'}
+          />
           
           <span 
             className="bi bi-plus-circle ms-2"  

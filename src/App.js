@@ -7,6 +7,7 @@ import Menu from './Menu.js';
 import MergeHierarchy from './MergeHierarchy.js';
 import LogsButton from './LogsButton.js';
 import LogsPage from './LogsPage.js';
+import SignalPage from './SignalPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
           }
         />
         <Route path="/logs" element={<LogsPage />} />
+        <Route path="/signals/:assetId" element={<SignalPage />} />
       </Routes>
     </Router>
   );
