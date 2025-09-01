@@ -68,7 +68,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
 
   // Handle navigate to signals
   const handleViewSignals = () => {
-    navigate(`/signals/${node.id}`);
+    navigate(`/signals/${node.id}/${node.name}`);
   };
 
   // Handle form input changes

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 function SignalPage() {
-  const { assetId } = useParams();
+  const { assetId, assetName } = useParams();
   const navigate = useNavigate();
   const [signals, setSignals] = useState([]);
-  const [assetName, setAssetName] = useState('');
+  // const [assetName, setAssetName] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   
@@ -26,7 +26,7 @@ function SignalPage() {
   const fetchSignals = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://localhost:7242/Asset/${assetId}/AllSignals`);
+      const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/AllSignals`);
       
       if (!response.ok) {
         throw new Error(`Failed to fetch signals: ${response.statusText}`);
@@ -36,9 +36,9 @@ function SignalPage() {
       setSignals(data);
       
       // Get asset name from the first signal's asset property
-      if (data.length > 0 && data[0].asset) {
-        setAssetName(data[0].asset.name);
-      }
+      // if (data.length > 0 && data[0].asset) {
+      //   setAssetName(data[0].asset.name);
+      // }
       
       setError('');
     } catch (err) {
@@ -61,8 +61,7 @@ function SignalPage() {
     setFormData({
       name: '',
       valueType: 'string',
-      description: '',
-      assetId: parseInt(assetId)
+      description: ''
     });
     setShowAddModal(true);
     setModalError('');
@@ -85,12 +84,13 @@ function SignalPage() {
   const handleDeleteSignal = async (signalId, signalName) => {
     if (window.confirm(`Are you sure you want to delete signal: ${signalName}?`)) {
       try {
-        const response = await fetch(`https://localhost:7242/api/Signal/${signalId}`, {
+        const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/Delete/Signal/${signalId}`, {
           method: 'DELETE'
         });
 
         if (!response.ok) {
           const errorText = await response.text();
+          console.log(errorText);
           throw new Error(errorText);
         }
 
@@ -119,7 +119,7 @@ function SignalPage() {
     setModalError('');
 
     try {
-      const response = await fetch('https://localhost:7242/api/Signal', {
+      const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/AddSignal`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ function SignalPage() {
       fetchSignals();
       alert('Signal added successfully!');
     } catch (error) {
-      console.error('Add signal failed:', error);
+      console.error('Add signal failed:', error.message);
       setModalError('Failed to add signal: ' + error.message);
     } finally {
       setIsSubmitting(false);
@@ -150,12 +150,12 @@ function SignalPage() {
     setModalError('');
 
     try {
-      const response = await fetch(`https://localhost:7242/api/Signal/${editingSignal.id}`, {
+      const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/UpdateSignal/${editingSignal.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ ...formData, id: editingSignal.id })
+        body: JSON.stringify(formData)
       });
 
       if (!response.ok) {
@@ -215,7 +215,7 @@ function SignalPage() {
           </button>
           <h2 className="text-primary mb-0">
             <i className="bi bi-broadcast me-2"></i>
-            Signals for: {assetName || `Asset ${assetId}`}
+            Signals for: {`Asset ${assetName}`}
           </h2>
         </div>
         <button
@@ -342,10 +342,7 @@ function SignalPage() {
                       required
                     >
                       <option value="string">String</option>
-                      <option value="int">Integer</option>
-                      <option value="float">Float</option>
-                      <option value="boolean">Boolean</option>
-                      <option value="double">Double</option>
+                      <option value="int">Real</option>
                     </select>
                   </div>
 

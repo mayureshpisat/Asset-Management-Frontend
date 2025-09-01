@@ -85,7 +85,7 @@ function App() {
           }
         />
         <Route path="/logs" element={<LogsPage />} />
-        <Route path="/signals/:assetId" element={<SignalPage />} />
+        <Route path="/signals/:assetId/:assetName" element={<SignalPage />} />
       </Routes>
     </Router>
   );
