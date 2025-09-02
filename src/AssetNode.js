@@ -17,6 +17,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
   const [formData, setFormData] = useState({
     parentId: '',
     id: '',
@@ -32,13 +33,6 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     }
   }, [searchTerm, shouldAutoExpand]);
 
-  const copyToClipboard = (id) => {
-    navigator.clipboard.writeText(id).then(() => {
-      console.log('ID copied to clipboard:', id);
-    }).catch(err => {
-      console.error('Failed to copy ID:', err);
-    });
-  };
 
   const deleteNode = async (id) => {
     if (window.confirm(`Are you sure you want to delete node with ID: ${id}?`)) {
@@ -73,65 +67,82 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     setErrorMessage('');
   };
 
+// Handle update node button click
+  const handleUpdate = (nodeToUpdate) => {
+  setModalMode('update');
+  setFormData({
+    parentId: nodeToUpdate.parentId || '',
+    id: nodeToUpdate.id,
+    name: nodeToUpdate.name
+  });
+  setShowModal(true);
+  setErrorMessage('');
+};
+
   // Handle navigate to signals
   const handleViewSignals = () => {
     navigate(`/signals/${node.id}/${node.name}`);
   };
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    
-    if (name === 'name') {
-      // Auto-generate ID when name changes
-      setFormData(prev => ({
-        ...prev,
-        name: value,
-        id : node.id
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: value
-      }));
-    }
-  };
+  // Handle input changes
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: value
+  }));
+};
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setErrorMessage('');
+  // Handle form submission for both Add and Update
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  setErrorMessage('');
 
-    try {
-      const response = await fetch("https://localhost:7242/api/AssetHierarchy", {
+  try {
+    const isUpdate = modalMode === 'update';
+    
+    let response;
+    
+    if (isUpdate) {
+      // For Update: Use PUT with query parameter
+      const url = `https://localhost:7242/api/AssetHierarchy/Update/${formData.id}?name=${encodeURIComponent(formData.name)}`;
+      response = await fetch(url, {
+        method: "PUT",
+        headers: getAuthHeaders()
+      });
+    } else {
+      // For Add: Use POST with JSON body
+      response = await fetch("https://localhost:7242/api/AssetHierarchy", {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify(formData)
       });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText);
-      }
-
-      // Success
-      setShowModal(false);
-      refreshHierarchy();
-      
-
-      
-    } catch (error) {
-      console.error("Add child failed:", error);
-      setErrorMessage("Failed to add child: " + error.message);
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    // Success
+    setShowModal(false);
+    refreshHierarchy();
+    
+  } catch (error) {
+    console.error(`${modalMode} failed:`, error);
+    setErrorMessage(`Failed to ${modalMode} ${modalMode === 'add' ? 'child' : 'node'}: ` + error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   // Handle modal close
   const handleCloseModal = () => {
     setShowModal(false);
+    setModalMode('add');
     setFormData({ parentId: '', id: '', name: '' });
     setErrorMessage('');
   };
@@ -247,10 +258,9 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
   />
 )}
 
-          {/* Update Button (only for Admins) */}
-{userRole === "Admin" && (
+          {userRole === "Admin" && (
   <span 
-    className="bi bi-pencil-square ms-2"  // ✏️ update icon
+    className="bi bi-pencil-square ms-2"
     style={{
       cursor: 'pointer',
       opacity: '0.2',
@@ -259,7 +269,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     }}
     onClick={(e) => {
       e.stopPropagation();
-      // handleUpdate(node); // ✅ call placeholder update method
+      handleUpdate(node); // ✅ now calls the actual handleUpdate method
     }}
     title={`Update: ${node.name}`}
     onMouseEnter={(e) => e.target.style.opacity = '1'}
@@ -303,94 +313,95 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
         )}
       </div>
 
-      {/* Add Child Modal */}
-      {showModal && (
-        <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title text-primary">
-                  <i className="bi bi-plus-circle me-2"></i>
-                  Add Child Node
-                </h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={handleCloseModal}
-                ></button>
-              </div>
-              
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold text-muted">
-                      <i className="bi bi-diagram-3 me-1"></i>
-                      Parent: {node.name}
-                    </label>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label htmlFor="childName" className="form-label fw-semibold">
-                      Child Name <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="childName"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="Enter child node name"
-                      maxLength="30"
-                    />
-                    <small className="text-muted">
-                      Only letters, numbers, and spaces allowed (max 30 characters)
-                    </small>
-                  </div>
-                  
-
-                  
-                  {errorMessage && (
-                    <div className="alert alert-danger py-2">
-                      <i className="bi bi-exclamation-triangle me-2"></i>
-                      {errorMessage}
-                    </div>
-                  )}
-                </div>
-                
-                <div className="modal-footer">
-                  <button 
-                    type="button" 
-                    className="btn btn-secondary" 
-                    onClick={handleCloseModal}
-                    disabled={isSubmitting}
-                  >
-                    Cancel
-                  </button>
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status"></span>
-                        Adding...
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-plus-circle me-2"></i>
-                        Add Child
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+      {/* Updated Modal JSX*/}
+{showModal && (
+  <div className="modal d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title text-primary">
+            <i className={`bi ${modalMode === 'add' ? 'bi-plus-circle' : 'bi-pencil-square'} me-2`}></i>
+            {modalMode === 'add' ? 'Add Child Node' : 'Update Node'}
+          </h5>
+          <button 
+            type="button" 
+            className="btn-close" 
+            onClick={handleCloseModal}
+          ></button>
         </div>
-      )}
+        
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            {/* Show parent info only for Add mode */}
+            {modalMode === 'add' && (
+              <div className="mb-3">
+                <label className="form-label fw-semibold text-muted">
+                  <i className="bi bi-diagram-3 me-1"></i>
+                  Parent: {node.name}
+                </label>
+              </div>
+            )}
+            
+            <div className="mb-3">
+              <label htmlFor="childName" className="form-label fw-semibold">
+                {modalMode === 'add' ? 'Child Name' : 'Node Name'} <span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="childName"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                required
+                placeholder={modalMode === 'add' ? 'Enter child node name' : 'Enter node name'}
+                maxLength="30"
+              />
+              <small className="text-muted">
+                Only letters, numbers, and spaces allowed (max 30 characters)
+              </small>
+            </div>
+            
+            {errorMessage && (
+              <div className="alert alert-danger py-2">
+                <i className="bi bi-exclamation-triangle me-2"></i>
+                {errorMessage}
+              </div>
+            )}
+          </div>
+          
+          <div className="modal-footer">
+            <button 
+              type="button" 
+              className="btn btn-secondary" 
+              onClick={handleCloseModal}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              className="btn btn-primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  {modalMode === 'add' ? 'Adding...' : 'Updating...'}
+                </>
+              ) : (
+                <>
+                  <i className={`bi ${modalMode === 'add' ? 'bi-plus-circle' : 'bi-check-circle'} me-2`}></i>
+                  {modalMode === 'add' ? 'Add Child' : 'Update Node'}
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+)}
     </>
   );
 }
