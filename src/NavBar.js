@@ -52,22 +52,14 @@ function NavBar() {
         {/* Navigation items */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
-            <li className="nav-item">
-              <button 
-                className={`nav-link btn btn-link text-white p-2 ${location.pathname === '/' ? 'active' : ''}`}
-                onClick={handleHome}
-              >
-                <i className="bi bi-house me-1"></i>
-                Hierarchy
-              </button>
-            </li>
+            
             <li className="nav-item">
               <button 
                 className={`nav-link btn btn-link text-white p-2 ${location.pathname === '/logs' ? 'active' : ''}`}
                 onClick={() => navigate('/logs')}
               >
                 <i className="bi bi-file-text me-1"></i>
-                Logs
+                Import Logs
               </button>
             </li>
           </ul>

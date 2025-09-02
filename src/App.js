@@ -1,6 +1,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './AuthContext';
 import Siderbar from './Siderbar.js';
 import NewNode from './NewNode.js';
 import Menu from './Menu.js';
@@ -8,12 +9,16 @@ import MergeHierarchy from './MergeHierarchy.js';
 import LogsButton from './LogsButton.js';
 import LogsPage from './LogsPage.js';
 import SignalPage from './SignalPage.js';
+import NavBar from './NavBar.js';
+import LoginPage from './LoginPage.js';
+import RegisterPage from './RegisterPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
+function AppContent() {
   const [hierarchy, setHierarchy] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [totalAssets, setTotalAssets] = useState(0);
+
 
   console.log(searchTerm);
   //Get total number of assets
@@ -51,9 +56,9 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        
+    <>
+      <NavBar />
+      <Routes>  
         <Route
           path="/"
           element={
@@ -87,8 +92,20 @@ function App() {
         />
         <Route path="/logs" element={<LogsPage />} />
         <Route path="/signals/:assetId/:assetName" element={<SignalPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Routes>
-    </Router>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </AuthProvider>
   );
 }
 
