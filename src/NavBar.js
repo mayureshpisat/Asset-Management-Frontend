@@ -10,9 +10,7 @@ function NavBar() {
   const handleLogout = () => {
     logout();
     // Navigate to home page after logout
-    if (location.pathname !== '/') {
-      navigate('/');
-    }
+    navigate("/login")
   };
 
   const handleLogin = () => {

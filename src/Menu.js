@@ -1,10 +1,12 @@
 import React from "react";
 import Download from "./Download";
+import { useAuth } from "./AuthContext";
 
 function Menu({ refreshHierarchy }) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [isUploading, setIsUploading] = React.useState(false);
+  const {getAuthHeaders} = useAuth();
 
   // Use useEffect for timeouts to avoid memory leaks and timing issues
   React.useEffect(() => {
@@ -37,6 +39,7 @@ function Menu({ refreshHierarchy }) {
     try {
       const response = await fetch("https://localhost:7242/api/AssetHierarchy/Upload", {
         method: "POST",
+        headers: getAuthHeaders(true),
         body: formData,
       });
 

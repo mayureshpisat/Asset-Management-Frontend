@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 function SignalPage() {
+  
   const { assetId, assetName } = useParams();
   const navigate = useNavigate();
   const [signals, setSignals] = useState([]);
@@ -21,6 +23,11 @@ function SignalPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalError, setModalError] = useState('');
+
+  //get user: Admin or Viewer
+  const {user} = useAuth();
+  const userRole = user.role;
+
 
   // Fetch signals for the asset
   const fetchSignals = async () => {
@@ -217,14 +224,16 @@ function SignalPage() {
             <i className="bi bi-broadcast me-2"></i>
             Signals for: {`Asset ${assetName}`}
           </h2>
+          
         </div>
-        <button
+        {userRole === "Admin" &&<button
           className="btn btn-primary"
           onClick={handleAddSignal}
         >
           <i className="bi bi-plus-circle me-2"></i>
           Add Signal
-        </button>
+        </button> }
+        
       </div>
 
       {/* Error Display */}
@@ -263,6 +272,7 @@ function SignalPage() {
                     <p className="mt-1 mb-0">{signal.description || 'No description provided'}</p>
                   </div>
                 </div>
+                {userRole==="Admin" && 
                 <div className="card-footer bg-light">
                   <div className="d-flex gap-2">
                     <button
@@ -281,6 +291,8 @@ function SignalPage() {
                     </button>
                   </div>
                 </div>
+                }
+                
               </div>
             </div>
           ))}

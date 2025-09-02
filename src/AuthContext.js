@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
+  
 
   // Check for existing token on app load
   useEffect(() => {
@@ -131,17 +132,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Function to get auth headers for API calls
-  const getAuthHeaders = () => {
-    if (token) {
+  const getAuthHeaders = (isFormData = false) => {
+  if (token) {
+    if (isFormData) {
       return {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Authorization': `Bearer ${token}`
       };
     }
     return {
+      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     };
-  };
+  }
+  return isFormData ? {} : { 'Content-Type': 'application/json' };
+};
 
   const value = {
     user,

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 function AssetNode({ node, refreshHierarchy, searchTerm }) {
   const navigate = useNavigate();
-  
+
+  //get auth values
+  const {getAuthHeaders, token, user} = useAuth();
+  console.log("FROM ASSET NODE" +getAuthHeaders()["Authorization"])
+
   // Auto-expand nodes that have search results or matching descendants
   const shouldAutoExpand = searchTerm && (node.isSearchResult || node.hasMatchingDescendant);
   const [expanded, setExpanded] = useState(shouldAutoExpand || true);
   const hasChildren = node.children && node.children.length > 0;
+  const userRole = user.role;
 
   // Modal state
   const [showModal, setShowModal] = useState(false);
@@ -38,7 +44,8 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     if (window.confirm(`Are you sure you want to delete node with ID: ${id}?`)) {
       try {
         const response = await fetch(`https://localhost:7242/api/AssetHierarchy/${id}`, {
-          method: "DELETE"
+          method: "DELETE",
+          headers : getAuthHeaders()
         });
 
         if (!response.ok) {
@@ -99,9 +106,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
     try {
       const response = await fetch("https://localhost:7242/api/AssetHierarchy", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(formData)
       });
 
@@ -221,41 +226,49 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
             onMouseLeave={(e) => e.target.style.opacity = '0.2'}
           />
           
-          <span 
-            className="bi bi-plus-circle ms-2"  
-            style={{
-              color: "#4f3fdcff",
-              cursor: 'pointer',
-              opacity: '0.2',
-              fontSize: '14px',
-              userSelect: 'none'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAddChild();
-            }}
-            title={`Add Children to: ${node.name}`}
-            onMouseEnter={(e) => e.target.style.opacity = '1'}
-            onMouseLeave={(e) => e.target.style.opacity = '0.2'}
-          />
+          {/* Add Button (only for Admins) */}
+{userRole === "Admin" && (
+  <span 
+    className="bi bi-plus-circle ms-2"  
+    style={{
+      color: "#4f3fdcff",
+      cursor: 'pointer',
+      opacity: '0.2',
+      fontSize: '14px',
+      userSelect: 'none'
+    }}
+    onClick={(e) => {
+      e.stopPropagation();
+      handleAddChild();
+    }}
+    title={`Add Children to: ${node.name}`}
+    onMouseEnter={(e) => e.target.style.opacity = '1'}
+    onMouseLeave={(e) => e.target.style.opacity = '0.2'}
+  />
+)}
+
+          {/* Update Button (only for Admins) */}
+{userRole === "Admin" && (
+  <span 
+    className="bi bi-pencil-square ms-2"  // ✏️ update icon
+    style={{
+      cursor: 'pointer',
+      opacity: '0.2',
+      fontSize: '14px',
+      userSelect: 'none'
+    }}
+    onClick={(e) => {
+      e.stopPropagation();
+      // handleUpdate(node); // ✅ call placeholder update method
+    }}
+    title={`Update: ${node.name}`}
+    onMouseEnter={(e) => e.target.style.opacity = '1'}
+    onMouseLeave={(e) => e.target.style.opacity = '0.2'}
+  />
+)}
           
-          <span 
-            className="bi bi-copy ms-2" 
-            style={{
-              cursor: 'pointer',
-              opacity: '0.2',
-              fontSize: '14px',
-              userSelect: 'none'
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              copyToClipboard(node.id);
-            }}
-            title={`Copy ID: ${node.id}`}
-            onMouseEnter={(e) => e.target.style.opacity = '1'}
-            onMouseLeave={(e) => e.target.style.opacity = '0.2'}
-          />
-          
+          {/* Delete Button (only for Admins) */}
+          {userRole === "Admin" &&
           <span 
             className="bi bi-trash ms-2"  
             style={{
@@ -272,7 +285,8 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
             title={`Delete node: ${node.name}`}
             onMouseEnter={(e) => e.target.style.opacity = '1'}
             onMouseLeave={(e) => e.target.style.opacity = '0.2'}
-          />
+          />}
+          
         </div>
 
         {hasChildren && expanded && (

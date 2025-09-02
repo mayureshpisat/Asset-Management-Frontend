@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { useAuth } from "./AuthContext";
 
 function MergeHierarchy({ refreshHierarchy }) {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // success | danger
-
+  const {getAuthHeaders} = useAuth();
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
 
@@ -22,6 +23,7 @@ function MergeHierarchy({ refreshHierarchy }) {
         "https://localhost:7242/api/AssetHierarchy/UploadExistingTree",
         {
           method: "POST",
+          headers: getAuthHeaders(true),
           body: formData,
         }
       );

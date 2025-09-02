@@ -28,12 +28,13 @@ function LoginPage() {
     const result = await login(formData.username, formData.password);
     
     if (result.success) {
-      navigate('/'); // Redirect to home page after successful login
+      navigate("/");
     } else {
       setError(result.error);
     }
     
     setLoading(false);
+
   };
 
   return (
