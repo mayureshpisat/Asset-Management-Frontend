@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 function RegisterPage() {
@@ -12,7 +12,7 @@ function RegisterPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [success, setSuccess] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +26,7 @@ function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setSuccess(false);
+    setSuccess('');
 
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
@@ -35,60 +35,33 @@ function RegisterPage() {
       return;
     }
 
-    // Validate password length
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    try {
+      const result = await register(formData.username, formData.password);
+      
+      if (result.success) {
+        setSuccess('Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
+      } else {
+        setError(result.error);
+      }
+    } catch (error) {
+      setError('Registration failed. Please try again.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const result = await register(formData.username, formData.password);
-    
-    if (result.success) {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000); // Redirect to login after 2 seconds
-    } else {
-      setError(result.error);
-    }
-    
-    setLoading(false);
   };
-
-  if (success) {
-    return (
-      <div className="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
-        <div className="row w-100">
-          <div className="col-md-6 col-lg-4 mx-auto">
-            <div className="card shadow">
-              <div className="card-body text-center p-4">
-                <div className="text-success mb-3">
-                  <i className="bi bi-check-circle" style={{ fontSize: '3rem' }}></i>
-                </div>
-                <h4 className="text-success">Registration Successful!</h4>
-                <p className="text-muted">
-                  Your account has been created successfully. You will be redirected to the login page shortly.
-                </p>
-                <div className="spinner-border spinner-border-sm text-primary me-2"></div>
-                <span className="text-muted">Redirecting...</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container-fluid vh-100 d-flex align-items-center justify-content-center bg-light">
       <div className="row w-100">
         <div className="col-md-6 col-lg-4 mx-auto">
           <div className="card shadow">
-            <div className="card-header bg-primary text-white text-center">
+            <div className="card-header bg-success text-white text-center">
               <h4 className="mb-0">
                 <i className="bi bi-person-plus me-2"></i>
-                Create Account
+                Register for Asset Management
               </h4>
             </div>
             <div className="card-body p-4">
@@ -96,6 +69,13 @@ function RegisterPage() {
                 <div className="alert alert-danger">
                   <i className="bi bi-exclamation-triangle me-2"></i>
                   {error}
+                </div>
+              )}
+              
+              {success && (
+                <div className="alert alert-success">
+                  <i className="bi bi-check-circle me-2"></i>
+                  {success}
                 </div>
               )}
               
@@ -115,7 +95,10 @@ function RegisterPage() {
                     required
                     placeholder="Choose a username"
                     autoComplete="username"
+                    disabled={loading}
+                    minLength="3"
                   />
+                  <small className="text-muted">Minimum 3 characters</small>
                 </div>
 
                 <div className="mb-3">
@@ -131,10 +114,12 @@ function RegisterPage() {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
-                    placeholder="Enter a password (min 6 characters)"
+                    placeholder="Choose a password"
                     autoComplete="new-password"
+                    disabled={loading}
                     minLength="6"
                   />
+                  <small className="text-muted">Minimum 6 characters</small>
                 </div>
 
                 <div className="mb-4">
@@ -152,19 +137,25 @@ function RegisterPage() {
                     required
                     placeholder="Confirm your password"
                     autoComplete="new-password"
+                    disabled={loading}
                   />
                 </div>
 
                 <div className="d-grid gap-2">
                   <button
                     type="submit"
-                    className="btn btn-primary"
-                    disabled={loading}
+                    className="btn btn-success"
+                    disabled={loading || success}
                   >
                     {loading ? (
                       <>
                         <span className="spinner-border spinner-border-sm me-2"></span>
-                        Creating Account...
+                        Registering...
+                      </>
+                    ) : success ? (
+                      <>
+                        <i className="bi bi-check-circle me-2"></i>
+                        Registered Successfully
                       </>
                     ) : (
                       <>

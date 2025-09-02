@@ -354,7 +354,7 @@ function SignalPage() {
                       required
                     >
                       <option value="string">String</option>
-                      <option value="int">Real</option>
+                      <option >Real</option>
                     </select>
                   </div>
 
@@ -469,10 +469,8 @@ function SignalPage() {
                       required
                     >
                       <option value="string">String</option>
-                      <option value="int">Integer</option>
-                      <option value="float">Float</option>
-                      <option value="boolean">Boolean</option>
-                      <option value="double">Double</option>
+                      <option >Real</option>
+                      
                     </select>
                   </div>
 

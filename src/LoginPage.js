@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 function LoginPage() {
-  const navigate = useNavigate();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
@@ -25,16 +24,18 @@ function LoginPage() {
     setLoading(true);
     setError('');
 
-    const result = await login(formData.username, formData.password);
-    
-    if (result.success) {
-      navigate("/");
-    } else {
-      setError(result.error);
+    try {
+      const result = await login(formData.username, formData.password);
+      
+      if (!result.success) {
+        setError(result.error);
+      }
+      // If successful, App.js will automatically redirect to home
+    } catch (error) {
+      setError('Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
-
   };
 
   return (
@@ -72,6 +73,7 @@ function LoginPage() {
                     required
                     placeholder="Enter your username"
                     autoComplete="username"
+                    disabled={loading}
                   />
                 </div>
 
@@ -90,6 +92,7 @@ function LoginPage() {
                     required
                     placeholder="Enter your password"
                     autoComplete="current-password"
+                    disabled={loading}
                   />
                 </div>
 
