@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
-function AssetNode({ node, refreshHierarchy, searchTerm }) {
+function AssetNode({ node, refreshHierarchy, searchTerm,fetchTotalAssets}) {
   const navigate = useNavigate();
 
   //get auth values
@@ -49,6 +49,7 @@ function AssetNode({ node, refreshHierarchy, searchTerm }) {
 
         alert("Node deleted successfully!");
         refreshHierarchy();
+        fetchTotalAssets();
       } catch (error) {
         console.error("Delete failed:", error);
         alert("Failed to delete node: " + error.message);
@@ -129,6 +130,7 @@ const handleSubmit = async (e) => {
     // Success
     setShowModal(false);
     refreshHierarchy();
+    fetchTotalAssets();
     
   } catch (error) {
     console.error(`${modalMode} failed:`, error);
@@ -307,6 +309,7 @@ const handleSubmit = async (e) => {
                 node={child} 
                 refreshHierarchy={refreshHierarchy}
                 searchTerm={searchTerm}
+                fetchTotalAssets = {fetchTotalAssets}
               />
             ))}
           </div>

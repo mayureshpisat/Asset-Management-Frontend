@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "./AuthContext";
 
-function MergeHierarchy({ refreshHierarchy }) {
+function MergeHierarchy({ refreshHierarchy,fetchTotalAssets }) {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // success | danger
   const {getAuthHeaders} = useAuth();
@@ -41,6 +41,7 @@ function MergeHierarchy({ refreshHierarchy }) {
       setMessageType("success");
       setTimeout(() => setMessage(""), 5000);
       refreshHierarchy();
+      fetchTotalAssets();
     } catch (error) {
       console.error("Upload error:", error);
       setMessage(`Upload failed: ${error.message}`);

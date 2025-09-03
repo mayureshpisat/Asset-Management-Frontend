@@ -1,27 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AssetNode from './AssetNode';
+import { useAuth } from './AuthContext';
 
 function filterTree(node, term) {
   if (!term || term.trim() === "") {
     return node; // no filtering
   }
-
+ 
   const lowerTerm = term.toLowerCase();
 
-  // Check if current node matches
   const isMatch = node.name.toLowerCase().includes(lowerTerm);
 
-  // If this node matches, return it with all its children (don't filter children)
   if (isMatch) {
     return { ...node, isSearchResult: true };
   }
 
-  // If this node doesn't match, recursively filter children
   const filteredChildren = (node.children || [])
     .map((child) => filterTree(child, term))
     .filter((child) => child !== null);
 
-  // Only return children that matched (flattened view)
   return filteredChildren.length > 0 ? { 
     ...node, 
     children: filteredChildren,
@@ -32,9 +29,48 @@ function filterTree(node, term) {
 function Siderbar({ hierarchy, totalAssets, fetchTotalAssets, refreshHierarchy, searchTerm, setSearchTerm }) {
   const filteredHierarchy = hierarchy && filterTree(hierarchy, searchTerm);
   
+  const { user,getAuthHeaders } = useAuth();
+  const userRole = user.role;
+
+  const [showModal, setShowModal] = useState(false);
+  const [assetName, setAssetName] = useState("");
+  const [error, setError] = useState("");
+
   useEffect(() => {
     fetchTotalAssets();
-  },);
+  },[]);
+
+  const handleAddAsset = async () => {
+  setError("");
+  if (!assetName.trim()) {
+    setError("Asset name cannot be empty.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`https://localhost:7242/api/AssetHierarchy/AddNewAsset?assetName=${assetName}`, {
+      method: "POST",
+      headers: getAuthHeaders()
+    });
+
+    if (!res.ok) {
+      const errorMsg = await res.text();
+      setError(errorMsg || "Failed to add asset.");
+      return;
+    }
+
+    const data = await res.text();
+    console.log(data);
+
+    setAssetName("");
+    setShowModal(false);
+    refreshHierarchy();
+    fetchTotalAssets();
+  } catch (err) {
+    setError("Failed to add asset.");
+  }
+};
+
 
   return (
     <div className="h-100">
@@ -47,6 +83,18 @@ function Siderbar({ hierarchy, totalAssets, fetchTotalAssets, refreshHierarchy, 
           Asset Hierarchy 
         </h2>
         <p className='fs-6 text-muted mb-3'>Total Assets: {totalAssets}</p>
+
+        {/* Conditionally render Add Asset button */}
+        {userRole === "Admin" && (
+          <div className="mb-3">
+            <button
+              className="btn btn-primary w-100"
+              onClick={() => setShowModal(true)}
+            >
+              <i className="bi bi-plus-circle me-2"></i> Add Asset
+            </button>
+          </div>
+        )}
         
         {/* Search box */}
         <div className="mb-0">
@@ -85,6 +133,7 @@ function Siderbar({ hierarchy, totalAssets, fetchTotalAssets, refreshHierarchy, 
                 node={child}
                 refreshHierarchy={refreshHierarchy}
                 searchTerm={searchTerm}
+                fetchTotalAssets={fetchTotalAssets}
               />
             ))
           ) : (
@@ -100,6 +149,35 @@ function Siderbar({ hierarchy, totalAssets, fetchTotalAssets, refreshHierarchy, 
           </div>
         )}
       </div>
+
+      {/* Add Asset Modal */}
+      {showModal && (
+        <div className="modal d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Add New Asset</h5>
+                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+              </div>
+              <div className="modal-body">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter asset name"
+                  value={assetName}
+                  onChange={(e) => setAssetName(e.target.value)}
+                />
+                {error && <small className="text-danger mt-2 d-block">{error}</small>}
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button className="btn btn-primary" onClick={handleAddAsset}>Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

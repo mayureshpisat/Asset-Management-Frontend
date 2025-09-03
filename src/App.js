@@ -103,9 +103,9 @@ function AppContent() {
 
                   {/* Sidebar with Upload/Download - Right */}
                   <div className="col-md-4 p-3 border-start bg-light">
-                    <Menu refreshHierarchy={fetchHierarchy} />
+                    <Menu refreshHierarchy={fetchHierarchy} fetchTotalAssets={fetchTotalAssets}/>
                     <div className="mt-3">
-                      <MergeHierarchy refreshHierarchy={fetchHierarchy} />
+                      <MergeHierarchy refreshHierarchy={fetchHierarchy} fetchTotalAssets={fetchTotalAssets} />
                     </div>
                     
                   </div>

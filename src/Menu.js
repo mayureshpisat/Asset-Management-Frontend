@@ -2,7 +2,7 @@ import React from "react";
 import Download from "./Download";
 import { useAuth } from "./AuthContext";
 
-function Menu({ refreshHierarchy }) {
+function Menu({ refreshHierarchy, fetchTotalAssets}) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [isUploading, setIsUploading] = React.useState(false);
@@ -51,6 +51,7 @@ function Menu({ refreshHierarchy }) {
         const message = await response.text();
         setSuccessMessage("✅ Upload successful: " + message);
         refreshHierarchy();
+        fetchTotalAssets();
       }
     } catch (error) {
       console.log(error);
