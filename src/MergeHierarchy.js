@@ -4,9 +4,15 @@ import { useAuth } from "./AuthContext";
 function MergeHierarchy({ refreshHierarchy,fetchTotalAssets }) {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // success | danger
-  const {getAuthHeaders} = useAuth();
+  const {getAuthHeaders,user} = useAuth();
+  const userRole = user.role;
+
+  if(user.role === "Viewer"){
+    return null;
+  }
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
+
 
     if (!file) {
       setMessage("Please select a file.");

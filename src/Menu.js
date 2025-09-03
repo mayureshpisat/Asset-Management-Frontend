@@ -1,28 +1,35 @@
 import React from "react";
 import Download from "./Download";
 import { useAuth } from "./AuthContext";
+import { useEffect } from "react";
 
 function Menu({ refreshHierarchy, fetchTotalAssets}) {
   const [errorMessage, setErrorMessage] = React.useState("");
   const [successMessage, setSuccessMessage] = React.useState("");
   const [isUploading, setIsUploading] = React.useState(false);
-  const {getAuthHeaders} = useAuth();
+  const {getAuthHeaders,user} = useAuth();
 
   // Use useEffect for timeouts to avoid memory leaks and timing issues
-  React.useEffect(() => {
+  useEffect(() => {
     if (successMessage) {
       const timer = setTimeout(() => setSuccessMessage(""), 4000);
       return () => clearTimeout(timer);
     }
   }, [successMessage]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (errorMessage) {
       const timer = setTimeout(() => setErrorMessage(""), 4000);
       return () => clearTimeout(timer);
     }
   }, [errorMessage]);
 
+  const userRole = user.role;
+
+  if(userRole === "Viewer"){
+    return (<Download/>)
+  }
+  
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     

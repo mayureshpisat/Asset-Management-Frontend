@@ -13,6 +13,9 @@ function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -97,49 +100,77 @@ function RegisterPage() {
                     autoComplete="username"
                     disabled={loading}
                     minLength="3"
+                    maxLength="30"
                   />
-                  <small className="text-muted">Minimum 3 characters</small>
+                  <small className="text-muted">Minimum 3 characters/ Maximum 30 characters</small>
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label fw-semibold">
-                    <i className="bi bi-lock me-1"></i>
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Choose a password"
-                    autoComplete="new-password"
-                    disabled={loading}
-                    minLength="6"
-                  />
-                  <small className="text-muted">Minimum 6 characters</small>
-                </div>
+  <label htmlFor="password" className="form-label fw-semibold">
+    <i className="bi bi-lock me-1"></i>
+    Password
+  </label>
+
+  <div className="input-group">
+    <input
+      type={showPassword ? "text" : "password"}
+      className="form-control"
+      id="password"
+      name="password"
+      value={formData.password}
+      onChange={handleInputChange}
+      required
+      placeholder="Choose a password"
+      autoComplete="new-password"
+      disabled={loading}
+      minLength="6"
+    />
+    <button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={() => setShowPassword(!showPassword)}
+      disabled={loading}
+      aria-label={showPassword ? "Hide password" : "Show password"}
+    >
+      <i className={showPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+    </button>
+  </div>
+
+  <small className="text-muted">Minimum 6 characters</small>
+</div>
+
 
                 <div className="mb-4">
-                  <label htmlFor="confirmPassword" className="form-label fw-semibold">
-                    <i className="bi bi-lock-fill me-1"></i>
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Confirm your password"
-                    autoComplete="new-password"
-                    disabled={loading}
-                  />
-                </div>
+  <label htmlFor="confirmPassword" className="form-label fw-semibold">
+    <i className="bi bi-lock-fill me-1"></i>
+    Confirm Password
+  </label>
+
+  <div className="input-group">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      className="form-control"
+      id="confirmPassword"
+      name="confirmPassword"
+      value={formData.confirmPassword}
+      onChange={handleInputChange}
+      required
+      placeholder="Confirm your password"
+      autoComplete="new-password"
+      disabled={loading}
+    />
+    <button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      disabled={loading}
+      aria-label={showConfirmPassword ? "Hide confirm password" : "Show confirm password"}
+    >
+      <i className={showConfirmPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+    </button>
+  </div>
+</div>
+
 
                 <div className="d-grid gap-2">
                   <button

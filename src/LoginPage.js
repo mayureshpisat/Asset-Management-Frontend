@@ -10,6 +10,8 @@ function LoginPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -70,6 +72,7 @@ function LoginPage() {
                     name="username"
                     value={formData.username}
                     onChange={handleInputChange}
+                    maxLength={30}
                     required
                     placeholder="Enter your username"
                     autoComplete="username"
@@ -78,23 +81,36 @@ function LoginPage() {
                 </div>
 
                 <div className="mb-4">
-                  <label htmlFor="password" className="form-label fw-semibold">
-                    <i className="bi bi-lock me-1"></i>
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                    disabled={loading}
-                  />
-                </div>
+  <label htmlFor="password" className="form-label fw-semibold">
+    <i className="bi bi-lock me-1"></i>
+    Password
+  </label>
+  
+  <div className="input-group">
+    <input
+      type={showConfirmPassword ? "text" : "password"}
+      className="form-control"
+      id="password"
+      name="password"
+      maxLength={32}
+      value={formData.password}
+      onChange={handleInputChange}
+      required
+      placeholder="Enter your password"
+      autoComplete="current-password"
+      disabled={loading}
+    />
+    <button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+      disabled={loading}
+      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+    >
+      <i className={showConfirmPassword ? "bi bi-eye-slash" : "bi bi-eye"}></i>
+    </button>
+  </div>
+</div>
 
                 <div className="d-grid gap-2">
                   <button
