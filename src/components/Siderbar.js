@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AssetNode from './AssetNode';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function filterTree(node, term) {
   if (!term || term.trim() === "") {

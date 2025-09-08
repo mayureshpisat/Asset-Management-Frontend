@@ -1,19 +1,22 @@
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './AuthContext';
-import Siderbar from './Siderbar.js';
-import NewNode from './NewNode.js';
-import Menu from './Menu.js';
-import MergeHierarchy from './MergeHierarchy.js';
-import LogsButton from './LogsButton.js';
-import LogsPage from './LogsPage.js';
-import SignalPage from './SignalPage.js';
-import NavBar from './NavBar.js';
-import LoginPage from './LoginPage.js';
-import RegisterPage from './RegisterPage.js';
+import { AuthProvider } from './context/AuthContext.js';
+import Siderbar from './components/Siderbar.js';
+import Menu from './components/Menu.js';
+import MergeHierarchy from './components/MergeHierarchy.js';
+import LogsPage from './pages/LoginPage.js';
+import SignalPage from './pages/SignalPage.js';
+import NavBar from './components/NavBar.js';
+import LoginPage from './pages/LoginPage.js';
+import RegisterPage from './pages/RegisterPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { useAuth } from './AuthContext';
+import { useAuth } from './context/AuthContext.js';
+import ImportLogsPage from './pages/ImportLogsPage.js';
+import { NotificationProvider } from './context/NotificationContext.js';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 // Loading component
 function LoadingSpinner() {
@@ -113,7 +116,7 @@ function AppContent() {
               </div>
             }
           />
-          <Route path="/logs" element={<LogsPage />} />
+          <Route path="/logs" element={<ImportLogsPage />} />
           <Route path="/signals/:assetId/:assetName" element={<SignalPage />} />
           
           {/* Redirect any auth routes to home when logged in */}
@@ -139,9 +142,12 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
+      <NotificationProvider>
       <Router>
         <AppContent />
       </Router>
+      <ToastContainer position="top-right" autoClose={3000} />
+      </NotificationProvider>
     </AuthProvider>
   );
 }

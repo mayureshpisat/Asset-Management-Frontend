@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function NavBar() {
   const navigate = useNavigate();
@@ -16,6 +16,10 @@ function NavBar() {
     navigate('/');
   };
 
+
+  const handleLogs = () =>{
+    navigate('/logs');
+  }
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
@@ -43,8 +47,8 @@ function NavBar() {
           <ul className="navbar-nav me-auto">
             <li className="nav-item">
               <button 
-                className={`nav-link btn btn-link text-white p-2 ${location.pathname === '/logs' ? 'active' : ''}`}
-                onClick={() => navigate('/logs')}
+                className={`nav-link btn btn-link text-white p-2`}
+                onClick = {handleLogs}
               >
                 <i className="bi bi-file-text me-1"></i>
                 Import Logs

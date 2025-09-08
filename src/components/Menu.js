@@ -1,6 +1,6 @@
 import React from "react";
-import Download from "./Download";
-import { useAuth } from "./AuthContext";
+import Download from "./Download.js";
+import { useAuth } from "../context/AuthContext.js";
 import { useEffect } from "react";
 
 function Menu({ refreshHierarchy, fetchTotalAssets}) {

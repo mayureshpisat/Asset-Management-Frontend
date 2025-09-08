@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
 
 function MergeHierarchy({ refreshHierarchy,fetchTotalAssets }) {
   const [message, setMessage] = useState("");
@@ -7,7 +7,7 @@ function MergeHierarchy({ refreshHierarchy,fetchTotalAssets }) {
   const {getAuthHeaders,user} = useAuth();
   const userRole = user.role;
 
-  if(user.role === "Viewer"){
+  if(userRole === "Viewer"){
     return null;
   }
   const handleFileChange = async (e) => {

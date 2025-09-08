@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../context/AuthContext';
 
 function SignalPage() {
   
@@ -25,7 +25,7 @@ function SignalPage() {
   const [modalError, setModalError] = useState('');
 
   //get user: Admin or Viewer
-  const {user} = useAuth();
+  const {user, getAuthHeaders} = useAuth();
   const userRole = user.role;
 
 
@@ -92,7 +92,8 @@ function SignalPage() {
     if (window.confirm(`Are you sure you want to delete signal: ${signalName}?`)) {
       try {
         const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/Delete/Signal/${signalId}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          headers: getAuthHeaders()
         });
 
         if (!response.ok) {
@@ -128,9 +129,7 @@ function SignalPage() {
     try {
       const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/AddSignal`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(formData)
       });
 
@@ -159,9 +158,7 @@ function SignalPage() {
     try {
       const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/UpdateSignal/${editingSignal.id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(formData)
       });
 
