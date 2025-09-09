@@ -11,39 +11,39 @@ export const NotificationProvider = ({ children }) => {
     const setupConnection = async () => {
       const connection = await startConnection();
 
-      connection.on("ReceiveMessage", (user, message) => {
-        const notification = { user, message, timestamp: new Date() };
+      connection.on("RecieveSignalNotification", (notification)=>{
+        notification.timestamp = new Date();
+        switch (notification.type){
+          case "SignalAdded":
+            toast.info(`${notification.user} added signal ${notification.name} `)
+            break;
+          case "SignalDeleted":
+            toast.info(`${notification.user} deleted signal ${notification.name}`)
+            break;
+          case "SignalUpdated":
+            toast.info(`${notification.user} updated asset ${notification.oldName} to ${notification.newName}`)
+            break;
 
-        // Store in state
-        setNotifications((prev) => [...prev, notification]);
 
-        // Show a toast popup
-        toast.info(`${user}: ${message}`);
-        console.log(`${user}: ${message}`);
-      });
+        }
+      })
 
-      connection.on("UpdateSignal", (user, message) => {
-        const notification = { user, message, timestamp: new Date() };
+      connection.on("RecieveAssetNotification", (notification)=>{
+        notification.timestamp = new Date();
+        switch (notification.type){
+          case "AssetAdded":
+            toast.info(`${notification.user} added asset ${notification.name} `)
+            break;
+          case "AssetDeleted":
+            toast.info(`${notification.user} deleted asset ${notification.name}`)
+            break;
+          case "AssetUpdated":
+            toast.info(`${notification.user} updated asset ${notification.oldName} to ${notification.newName}`)
+            break;
 
-        // Store in state
-        setNotifications((prev) => [...prev, notification]);
-        toast.info(`${user} : ${message}`)
 
-        console.log(`${user} : ${message}`);
-        
-      });
-
-      connection.on("DeleteSignal", (user, message) => {
-        const notification = { user, message, timestamp: new Date() };
-
-        // Store in state
-        setNotifications((prev) => [...prev, notification]);
-        toast.info(`${user} : ${message}`)
-
-        console.log(`${user} : ${message}`);
-        
-      });
-
+        }
+      })
 
     
 
