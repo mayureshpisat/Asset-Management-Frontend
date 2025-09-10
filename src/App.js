@@ -13,7 +13,7 @@ import RegisterPage from './pages/RegisterPage.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useAuth } from './context/AuthContext.js';
 import ImportLogsPage from './pages/ImportLogsPage.js';
-import { NotificationProvider } from './context/NotificationContext.js';
+import { NotificationProvider, useNotifications } from './context/NotificationContext.js';
 import { ToastContainer } from "react-toastify";
 import AuthCallbackPage from './pages/AuthCallbackPage.js';
 import "react-toastify/dist/ReactToastify.css";
@@ -40,6 +40,7 @@ function AppContent() {
 
   // Get auth state including loading
   const { token, loading, isAuthenticated } = useAuth();
+  const {notifications} = useNotifications();
 
   const fetchTotalAssets = () => {
     fetch("https://localhost:7242/api/AssetHierarchy/TotalAssets")
@@ -75,7 +76,7 @@ function AppContent() {
     if (isAuthenticated()) {
       fetchHierarchy();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, notifications]);
 
   // Show loading spinner while auth is initializing
   if (loading) {
