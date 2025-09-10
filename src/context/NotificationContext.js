@@ -33,6 +33,7 @@ export const NotificationProvider = ({ children }) => {
         switch (notification.type){
           case "AssetAdded":
             toast.info(`${notification.user} added asset ${notification.name} `)
+            console.log(notifications)
             break;
           case "AssetDeleted":
             toast.info(`${notification.user} deleted asset ${notification.name}`)
