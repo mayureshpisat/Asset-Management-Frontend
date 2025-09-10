@@ -7,6 +7,7 @@ function RegisterPage() {
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     username: '',
+    email : '',
     password: '',
     confirmPassword: ''
   });
@@ -39,7 +40,7 @@ function RegisterPage() {
     }
 
     try {
-      const result = await register(formData.username, formData.password);
+      const result = await register(formData.username,formData.email, formData.password);
       
       if (result.success) {
         setSuccess('Registration successful! Redirecting to login...');
@@ -104,7 +105,27 @@ function RegisterPage() {
                   />
                   <small className="text-muted">Minimum 3 characters/ Maximum 30 characters</small>
                 </div>
-
+                  <div className="mb-3">
+                  <label htmlFor="username" className="form-label fw-semibold">
+                    <i className="bi bi-person me-1"></i>
+                    Email
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Choose a username"
+                    autoComplete="username"
+                    disabled={loading}
+                    minLength="3"
+                    maxLength="30"
+                  />
+                  <small className="text-muted">Enter a valid email</small>
+                </div>
                 <div className="mb-3">
   <label htmlFor="password" className="form-label fw-semibold">
     <i className="bi bi-lock me-1"></i>
