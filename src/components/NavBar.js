@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-
+import { NotificationProvider, useNotifications } from '../context/NotificationContext';
+import NotificationDropdown from './NotificationDropdown';
 function NavBar() {
+
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
@@ -58,6 +60,7 @@ function NavBar() {
 
           {/* User info and logout */}
           <div className="d-flex align-items-center">
+            <NotificationDropdown/>
             <div className="d-flex align-items-center">
               {/* User info */}
               <div className="text-white me-3">

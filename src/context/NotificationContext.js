@@ -30,10 +30,17 @@ export const NotificationProvider = ({ children }) => {
 
       connection.on("RecieveAssetNotification", (notification)=>{
         notification.timestamp = new Date();
+        setNotifications(prev => {
+        const updated = [...prev, notification];
+          console.log(updated);
+  return updated;
+});
         switch (notification.type){
           case "AssetAdded":
             toast.info(`${notification.user} added asset ${notification.name} `)
-            console.log(notifications)
+            notifications.map((val)=>{
+              console.log(val);
+            })
             break;
           case "AssetDeleted":
             toast.info(`${notification.user} deleted asset ${notification.name}`)
@@ -52,6 +59,7 @@ export const NotificationProvider = ({ children }) => {
     };
 
     setupConnection();
+    
   }, []);
 
   return (
