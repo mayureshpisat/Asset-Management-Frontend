@@ -128,6 +128,13 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const loginWithToken = (newToken, newUser) =>{
+  setToken(newToken);
+  setUser(newUser);
+  localStorage.setItem("authToken", newToken);
+  localStorage.setItem("authUser", JSON.stringify(newUser));
+  }
+
   const isAuthenticated = () => {
     return token !== null && user !== null;
   };
@@ -156,6 +163,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     isAuthenticated,
     getAuthHeaders,
+    loginWithToken,
     loading
   };
 

@@ -12,7 +12,24 @@ function LoginPage() {
   const [error, setError] = useState('');
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
+  const handleGoogleLogin = () => {
+  const clientId = "480700580712-qk4nhh316f5n5b9jfos5n0nldn4gn4i7.apps.googleusercontent.com";
+  const redirectUri = "http://localhost:3000/auth/callback"; // must match Google Console
+  const scope = "openid email profile";
+  const responseType = "id_token";
 
+  const url =
+    `https://accounts.google.com/o/oauth2/v2/auth` +
+    `?client_id=${clientId}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&response_type=${responseType}` +
+    `&scope=${encodeURIComponent(scope)}` +
+    `&nonce=${crypto.randomUUID()}`;
+
+  window.location.href = url;
+
+
+  }
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -130,6 +147,15 @@ function LoginPage() {
                       </>
                     )}
                   </button>
+                  {/* Google Login Button */}
+  <button
+    type="button"
+    className="btn btn-outline-danger"
+    onClick={handleGoogleLogin}
+  >
+    <i className="bi bi-google me-2"></i>
+    Login with Google
+  </button>
                 </div>
               </form>
             </div>

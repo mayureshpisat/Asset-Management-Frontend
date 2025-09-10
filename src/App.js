@@ -15,6 +15,7 @@ import { useAuth } from './context/AuthContext.js';
 import ImportLogsPage from './pages/ImportLogsPage.js';
 import { NotificationProvider } from './context/NotificationContext.js';
 import { ToastContainer } from "react-toastify";
+import AuthCallbackPage from './pages/AuthCallbackPage.js';
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -86,7 +87,10 @@ function AppContent() {
     return (
       <>
         <NavBar />
+
         <Routes>
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
           <Route
             path="/"
             element={
@@ -131,6 +135,8 @@ function AppContent() {
   // If user is not authenticated, show auth routes without NavBar
   return (
     <Routes>
+      <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       {/* Redirect any other route to login when not authenticated */}
