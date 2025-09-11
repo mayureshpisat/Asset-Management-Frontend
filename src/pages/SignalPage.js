@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
 
 function SignalPage() {
   
@@ -23,7 +24,7 @@ function SignalPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [modalError, setModalError] = useState('');
-
+  const {notifications}  = useNotifications();
   //get user: Admin or Viewer
   const {user, getAuthHeaders} = useAuth();
   const userRole = user.role;
@@ -61,7 +62,7 @@ function SignalPage() {
     if (assetId) {
       fetchSignals();
     }
-  }, [assetId]);
+  }, [assetId,notifications]);
 
   // Handle add signal
   const handleAddSignal = () => {
