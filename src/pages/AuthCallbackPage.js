@@ -25,7 +25,10 @@ function AuthCallbackPage() {
         // Send ID token to backend ExternalLogin endpoint
         const response = await fetch("https://localhost:7242/api/Auth/ExternalLogin", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json" 
+          },
+          credentials: 'include', // Include cookies for authentication
           body: JSON.stringify({ idToken }),
         });
 
@@ -33,13 +36,25 @@ function AuthCallbackPage() {
           throw new Error("External login failed");
         }
 
-        const data = await response.json();
-        console.log("FROM AUTH CALLBACK")
-        console.log(data.token)
-        console.log(data.user)
+        // After successful external login, get user info from the dedicated endpoint
+        const userInfoResponse = await fetch('https://localhost:7242/api/Auth/GetUserInfo', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include' // Include the cookie that was just set
+        });
 
-        // Update AuthProvider state and localStorage
-        loginWithToken(data.token, data.user);
+        if (!userInfoResponse.ok) {
+          const errorText = await userInfoResponse.text();
+          throw new Error('Failed to get user info: ' + errorText);
+        }
+
+        const userData = await userInfoResponse.json();
+        console.log("FROM AUTH CALLBACK - User Data:", userData);
+
+        // Update AuthProvider state and localStorage with user data only
+        loginWithToken(userData);
 
         // Redirect to home
         navigate("/", { replace: true });

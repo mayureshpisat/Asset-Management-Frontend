@@ -50,7 +50,9 @@ function Siderbar({ hierarchy, totalAssets, fetchTotalAssets, refreshHierarchy, 
   try {
     const res = await fetch(`https://localhost:7242/api/AssetHierarchy/AddNewAsset?assetName=${assetName}`, {
       method: "POST",
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      credentials : "include"
+
     });
 
     if (!res.ok) {

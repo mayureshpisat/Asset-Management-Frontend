@@ -167,7 +167,8 @@ function AssetNode({ node, refreshHierarchy, searchTerm, fetchTotalAssets }) {
         `https://localhost:7242/api/AssetHierarchy/ReorderAsset/${assetId}/${newParentId}`,
         {
           method: 'POST',
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
+          credentials : "include"
         }
       );
 
@@ -193,7 +194,8 @@ function AssetNode({ node, refreshHierarchy, searchTerm, fetchTotalAssets }) {
       try {
         const response = await fetch(`https://localhost:7242/api/AssetHierarchy/${id}`, {
           method: "DELETE",
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
+          credentials : "include"
         });
 
         if (!response.ok) {
@@ -257,12 +259,14 @@ function AssetNode({ node, refreshHierarchy, searchTerm, fetchTotalAssets }) {
         const url = `https://localhost:7242/api/AssetHierarchy/Update/${formData.id}?name=${encodeURIComponent(formData.name)}`;
         response = await fetch(url, {
           method: "PUT",
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
+          credentials : "include"
         });
       } else {
         response = await fetch("https://localhost:7242/api/AssetHierarchy", {
           method: "POST",
           headers: getAuthHeaders(),
+          credentials : "include",
           body: JSON.stringify(formData)
         });
       }

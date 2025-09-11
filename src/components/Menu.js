@@ -46,7 +46,7 @@ function Menu({ refreshHierarchy, fetchTotalAssets}) {
     try {
       const response = await fetch("https://localhost:7242/api/AssetHierarchy/Upload", {
         method: "POST",
-        headers: getAuthHeaders(true),
+        credentials: "include",
         body: formData,
       });
 

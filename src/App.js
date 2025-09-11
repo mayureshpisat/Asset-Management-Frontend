@@ -72,11 +72,40 @@ function AppContent() {
       .catch((error) => console.log(error));
   };
 
+  const refreshData = async () => {
+    if (isAuthenticated()) {
+      await Promise.all([
+        fetchHierarchy(),
+        fetchTotalAssets()
+      ]);
+    }
+  };
   useEffect(() => {
     if (isAuthenticated()) {
-      fetchHierarchy();
+      refreshData()
     }
-  }, [isAuthenticated, notifications]);
+  }, [isAuthenticated]);
+
+  // Refresh data when notifications change (for real-time updates)
+  useEffect(() => {
+    if (notifications.length > 0 && isAuthenticated()) {
+      // Get the latest notification
+      const latestNotification = notifications[notifications.length - 1];
+      
+      // Only refresh for asset-related notifications to avoid unnecessary calls
+      if (latestNotification.type && 
+          (latestNotification.type.includes('Asset') || latestNotification.type.includes('Signal'))) {
+        
+        // Add a small delay to ensure backend operations are complete
+        const timeoutId = setTimeout(() => {
+          refreshData();
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+      }
+    }
+  }, [notifications, isAuthenticated]);
+
 
   // Show loading spinner while auth is initializing
   if (loading) {

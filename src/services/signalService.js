@@ -6,7 +6,7 @@ export const startConnection = async (accessToken) => {
   console.log("FROM startConnection" + accessToken)
   connection = new signalR.HubConnectionBuilder()
     .withUrl("https:/localhost:7242/Notification", {
-      accessTokenFactory: () => accessToken // Pass the token here
+      withCredentials : true
     }) // adjust backend URL
     .withAutomaticReconnect()
     .build();
@@ -21,4 +21,5 @@ export const startConnection = async (accessToken) => {
   return connection;
 };
 
+export {connection}
 export default startConnection;

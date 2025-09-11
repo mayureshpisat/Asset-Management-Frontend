@@ -29,7 +29,7 @@ function MergeHierarchy({ refreshHierarchy,fetchTotalAssets }) {
         "https://localhost:7242/api/AssetHierarchy/UploadExistingTree",
         {
           method: "POST",
-          headers: getAuthHeaders(true),
+          credentials : "include",
           body: formData,
         }
       );

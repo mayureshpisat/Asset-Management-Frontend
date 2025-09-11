@@ -12,80 +12,63 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   
-
-  // Check for existing token on app load
+  // Check for existing user on app load
   useEffect(() => {
-    const storedToken = localStorage.getItem('authToken');
     const storedUser = localStorage.getItem('authUser');
     
-    if (storedToken && storedUser) {
+    if (storedUser) {
       try {
-        // Parse the token to check if it's expired
-        const tokenPayload = JSON.parse(atob(storedToken.split('.')[1]));
-        const currentTime = Date.now() / 1000;
-        
-        if (tokenPayload.exp > currentTime) {
-          // Token is still valid
-          setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-        } else {
-          // Token expired, clear it
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('authUser');
-        }
+        setUser(JSON.parse(storedUser));
       } catch (error) {
-        console.error('Error parsing stored token:', error);
-        localStorage.removeItem('authToken');
+        console.error('Error parsing stored user:', error);
         localStorage.removeItem('authUser');
       }
     }
     setLoading(false);
   }, []);
 
-
   const login = async (username, password) => {
     try {
-      const response = await fetch('https://localhost:7242/api/Auth/Login', {
+      // First, login to get the cookie set
+      const loginResponse = await fetch('https://localhost:7242/api/Auth/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include', // Important: include cookies in requests
         body: JSON.stringify({
           username: username,
           password: password
         })
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
+      if (!loginResponse.ok) {
+        const errorText = await loginResponse.text();
         throw new Error(errorText);
       }
 
-      const data = await response.json();
-      
-      // Handle both 'Token' and 'token' property names
-      const jwtToken = data.Token || data.token;
-      
-      // Parse user info from token
-      const tokenPayload = JSON.parse(atob(jwtToken.split('.')[1]));
-      console.log("JWT Token:", jwtToken);
-      console.log("Decoded Payload:", tokenPayload);
+      // After successful login, get user info
+      const userInfoResponse = await fetch('https://localhost:7242/api/Auth/GetUserInfo', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Include the cookie that was just set
+      });
 
-      const userData = {
-        id: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"],
-        username: tokenPayload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"],
-        role: tokenPayload["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-      };
+      if (!userInfoResponse.ok) {
+        const errorText = await userInfoResponse.text();
+        throw new Error('Failed to get user info: ' + errorText);
+      }
 
-      // Store in localStorage
-      localStorage.setItem('authToken', jwtToken);
+      const userData = await userInfoResponse.json();
+      
+      // Store user info in localStorage
       localStorage.setItem('authUser', JSON.stringify(userData));
       
       // Update state
-      setToken(jwtToken);
       setUser(userData);
       
       return { success: true };
@@ -102,6 +85,7 @@ export const AuthProvider = ({ children }) => {
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify({
           username: username,
           email: email,
@@ -122,42 +106,28 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem('authToken');
     localStorage.removeItem('authUser');
-    setToken(null);
     setUser(null);
   };
 
-  const loginWithToken = (newToken, newUser) =>{
-  setToken(newToken);
-  setUser(newUser);
-  localStorage.setItem("authToken", newToken);
-  localStorage.setItem("authUser", JSON.stringify(newUser));
+  const loginWithToken = (newUser) => {
+    setUser(newUser);
+    localStorage.setItem("authUser", JSON.stringify(newUser));
   }
 
   const isAuthenticated = () => {
-    return token !== null && user !== null;
+    return user !== null;
   };
 
-  // Function to get auth headers for API calls
-  const getAuthHeaders = (isFormData = false) => {
-  if (token) {
-    if (isFormData) {
-      return {
-        'Authorization': `Bearer ${token}`
-      };
-    }
+  // Function to get auth headers for API calls (now only returns Content-Type)
+  const getAuthHeaders = () => {
     return {
-      'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     };
-  }
-  return isFormData ? {} : { 'Content-Type': 'application/json' };
-};
+  };
 
   const value = {
     user,
-    token,
     login,
     register,
     logout,

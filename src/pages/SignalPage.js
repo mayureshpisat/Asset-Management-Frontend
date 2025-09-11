@@ -94,7 +94,8 @@ function SignalPage() {
       try {
         const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/Delete/Signal/${signalId}`, {
           method: 'DELETE',
-          headers: getAuthHeaders()
+          headers: getAuthHeaders(),
+          credentials: "include"
         });
 
         if (!response.ok) {
@@ -131,6 +132,7 @@ function SignalPage() {
       const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/AddSignal`, {
         method: 'POST',
         headers: getAuthHeaders(),
+        credentials: "include",
         body: JSON.stringify(formData)
       });
 
@@ -160,6 +162,7 @@ function SignalPage() {
       const response = await fetch(`https://localhost:7242/api/Signals/Asset/${assetId}/UpdateSignal/${editingSignal.id}`, {
         method: 'PUT',
         headers: getAuthHeaders(),
+        credentials : "include",
         body: JSON.stringify(formData)
       });
 
