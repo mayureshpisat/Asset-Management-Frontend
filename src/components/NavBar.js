@@ -56,11 +56,12 @@ function NavBar() {
                 Import Logs
               </button>
             </li>
+            <NotificationDropdown/>
+
           </ul>
 
           {/* User info and logout */}
           <div className="d-flex align-items-center">
-            <NotificationDropdown/>
             <div className="d-flex align-items-center">
               {/* User info */}
               <div className="text-white me-3">

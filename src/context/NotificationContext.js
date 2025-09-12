@@ -2,13 +2,22 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { startConnection } from "../services/signalService";
 import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
+import { notificationService } from "../services/notificationService";
 
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]); //for realtime notification by signal r
+  const [storedNotifications, setStoredNotifications] = useState([]); // For stored notifications from DB
   const [connection, setConnection] = useState(null);
   const { user, isAuthenticated } = useAuth(); // Removed token since we're using cookies
+
+  // Fetch stored notifications when user logs in (only for admins)
+  useEffect(() => {
+    if (isAuthenticated() && user && user.role === "Admin") {
+      fetchStoredNotifications();
+    }
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     let isMounted = true; // Flag to prevent state updates after unmount
@@ -101,9 +110,71 @@ export const NotificationProvider = ({ children }) => {
     };
   }, [isAuthenticated, user?.id]); // Only depend on user.id to avoid unnecessary reconnections
 
+  // Fetch stored notifications from the database
+  const fetchStoredNotifications = async () => {
+    if (!user?.id) return;
+    
+    try {
+      const notifications = await notificationService.getUserNotifications(user.id);
+      setStoredNotifications(notifications);
+    } catch (error) {
+      console.error("Error fetching stored notifications:", error);
+    }
+  };
+
+  // Mark notifications as read
+  const markNotificationsAsRead = async (notificationIds) => {
+    try {
+      await notificationService.markNotificationsAsRead(notificationIds);
+      // Update local state
+      setStoredNotifications(prev => 
+        prev.map(notification => 
+          notificationIds.includes(notification.id) 
+            ? { ...notification, isRead: true }
+            : notification
+        )
+      );
+    } catch (error) {
+      console.error("Error marking notifications as read:", error);
+    }
+  };
+
+  // Mark all notifications as read
+  const markAllNotificationsAsRead = async () => {
+    if (!user?.id) return;
+    
+    try {
+      await notificationService.markAllNotificationsAsRead(user.id);
+      // Update local state
+      setStoredNotifications(prev => 
+        prev.map(notification => ({ ...notification, isRead: true }))
+      );
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+    }
+  };
+
+  // Clear all notifications
+  const clearAllNotifications = async () => {
+    if (!user?.id) return;
+    
+    try {
+      await notificationService.clearAllNotifications(user.id);
+      setStoredNotifications([]);
+      setNotifications([]);
+    } catch (error) {
+      console.error("Error clearing notifications:", error);
+    }
+  };
+
   const value = {
+    storedNotifications,
     notifications,
-    connection
+    connection,
+    fetchStoredNotifications,
+    markAllNotificationsAsRead,
+    markNotificationsAsRead,
+    clearAllNotifications
   };
 
   return (
