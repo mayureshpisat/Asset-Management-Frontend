@@ -41,6 +41,7 @@ export const notificationService = {
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
+        console.log("MARK AS NOTIFICATION DID NOT RUN");
       }
 
       return await response.json();
@@ -64,8 +65,9 @@ export const notificationService = {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      console.log("Marked all notification as read");
       return await response.json();
+
     } catch (error) {
       console.error('Error marking all notifications as read:', error);
       throw error;
