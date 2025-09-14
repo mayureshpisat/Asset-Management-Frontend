@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNotifications } from './NotificationContext';
+
 
 const AuthContext = createContext();
 
@@ -13,7 +15,6 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  
   // Check for existing user on app load
   useEffect(() => {
     const storedUser = localStorage.getItem('authUser');
@@ -105,9 +106,31 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('authUser');
-    setUser(null);
+    const logout = async () => {
+    try {
+      // Set loading state to prevent UI flicker
+      setLoading(true);
+      
+      // Clear user state and localStorage first for immediate UI update
+      setUser(null);
+      localStorage.removeItem('authUser');
+      
+      // Then call the API to clear server-side cookie
+      const response = await fetch("https://localhost:7242/api/Auth/Logout", {
+        method: "POST",
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        console.warn('Logout API call failed, but user was logged out locally');
+      }
+      
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if API call fails, we've cleared local state
+    } finally {
+      setLoading(false);
+    }
   };
 
   const loginWithToken = (newUser) => {

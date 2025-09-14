@@ -17,6 +17,7 @@ import { NotificationProvider, useNotifications } from './context/NotificationCo
 import { ToastContainer } from "react-toastify";
 import AuthCallbackPage from './pages/AuthCallbackPage.js';
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from 'react-router-dom';
 
 
 // Loading component
@@ -37,7 +38,7 @@ function AppContent() {
   const [hierarchy, setHierarchy] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [totalAssets, setTotalAssets] = useState(0);
-
+  const navigate = useNavigate();
   // Get auth state including loading
   const { token, loading, isAuthenticated } = useAuth();
   const {notifications} = useNotifications();
@@ -86,6 +87,8 @@ function AppContent() {
     }
   }, [isAuthenticated]);
 
+
+  
   // Refresh data when notifications change (for real-time updates)
   useEffect(() => {
     if (notifications.length > 0 && isAuthenticated()) {
@@ -111,6 +114,8 @@ function AppContent() {
   if (loading) {
     return <LoadingSpinner />;
   }
+
+  
 
   // If user is authenticated, show main app with NavBar
   if (isAuthenticated()) {

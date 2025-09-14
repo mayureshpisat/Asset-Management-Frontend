@@ -3,7 +3,6 @@ import { startConnection } from "../services/signalService";
 import { toast } from "react-toastify";
 import { useAuth } from "./AuthContext";
 import { notificationService } from "../services/notificationService";
-
 const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
@@ -13,6 +12,20 @@ export const NotificationProvider = ({ children }) => {
   const { user, isAuthenticated } = useAuth(); // Removed token since we're using cookies
 
   // Fetch stored notifications when user logs in (only for admins)
+    // Clear notifications when user logs out
+  useEffect(() => {
+    if (!user) {
+      setNotifications([]);
+      setStoredNotifications([]);
+      
+      // Close SignalR connection when user logs out
+      if (connection) {
+        connection.stop().catch(console.error);
+        setConnection(null);
+      }
+    }
+  }, [user]); // Fixed: Added user as dependency
+
   useEffect(() => {
     if (isAuthenticated() && user && user.role === "Admin") {
       fetchStoredNotifications();
@@ -171,6 +184,7 @@ export const NotificationProvider = ({ children }) => {
     storedNotifications,
     notifications,
     connection,
+    setNotifications,
     fetchStoredNotifications,
     markAllNotificationsAsRead,
     markNotificationsAsRead,
