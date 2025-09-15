@@ -30,7 +30,7 @@ export const NotificationProvider = ({ children }) => {
     if (isAuthenticated() && user && user.role === "Admin") {
       fetchStoredNotifications();
     }
-  }, [isAuthenticated, user?.id]);
+  }, [isAuthenticated, user?.id, notifications]);
 
   useEffect(() => {
     let isMounted = true; // Flag to prevent state updates after unmount
@@ -76,7 +76,14 @@ export const NotificationProvider = ({ children }) => {
             default:
               break;
           }
+
+          // Fetch updated stored notifications after receiving real-time notification
+          if (user && user.role === "Admin") {
+            fetchStoredNotifications();
+          }
         });
+
+        
 
         newConnection.on("RecieveAssetNotification", (notification) => {
           if (!isMounted) return;
@@ -104,6 +111,11 @@ export const NotificationProvider = ({ children }) => {
               break;
             default:
               break;
+          }
+
+          // Fetch updated stored notifications after receiving real-time notification
+          if (user && user.role === "Admin") {
+            fetchStoredNotifications();
           }
         });
 

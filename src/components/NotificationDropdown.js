@@ -6,77 +6,36 @@ function NotificationDropdown() {
   
   const { user } = useAuth();
   const { 
-    notifications, 
     storedNotifications, 
     markNotificationsAsRead,
     markAllNotificationsAsRead,
     clearAllNotifications 
   } = useNotifications();
   const [open, setOpen] = useState(false);
-
-  // Get notification message for real-time notifications
-  const getNotificationMessage = (notification) => {
-    switch (notification.type) {
-      case "SignalAdded":
-        return `${notification.user} added signal ${notification.name} under ${notification.parent}`;
-      case "SignalDeleted":
-        return `${notification.user} deleted signal ${notification.name} under ${notification.parent}`;
-      case "SignalUpdated":
-        return `${notification.user} updated signal ${notification.oldName} to ${notification.newName} under ${notification.parent}`;
-      case "AssetAdded":
-        return `${notification.user} added asset ${notification.name}`;
-      case "AssetDeleted":
-        return `${notification.user} deleted asset ${notification.name}`;
-      case "AssetUpdated":
-        return `${notification.user} updated asset ${notification.oldName} to ${notification.newName}`;
-      default:
-        return notification.message || "New notification";
-    }
-  };
   
-  // Combine and format all notifications
+  // Format stored notifications for display
   const allNotifications = useMemo(() => {
-    // Format real-time notifications
-    const formattedRealTime = notifications.map((n, index) => ({
-      id: `realtime-${index}`,
-      type: n.type,
-      message: getNotificationMessage(n),
-      senderName: n.user,
-      isRead: false,
-      timestamp: n.timestamp,
-      isRealTime: true
-    }));
-
-    // Format stored notifications
-    const formattedStored = storedNotifications.map(n => ({
+    return storedNotifications.map(n => ({
       id: n.id,
       type: n.type,
       message: n.message,
       senderName: n.senderName,
       isRead: n.isRead,
-      timestamp: new Date(n.createdAt),
-      isRealTime: false
-    }));
-
-    // Combine and sort by timestamp (newest first)
-    return [...formattedRealTime, ...formattedStored]
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-  }, [notifications, storedNotifications]);
-
+      timestamp: new Date(n.createdAt)
+    })).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }, [storedNotifications]);
 
   // Only render for admin users
   if (!user || user.role !== "Admin") {
     return null;
   }
 
-  
-
   // Count unread notifications
   const unreadCount = allNotifications.filter(n => !n.isRead).length;
 
   // Handle marking single notification as read
   const handleMarkAsRead = async (notification) => {
-    if (!notification.isRead && !notification.isRealTime) {
+    if (!notification.isRead) {
       await markNotificationsAsRead([notification.id]);
     }
   };
@@ -154,11 +113,6 @@ function NotificationDropdown() {
                     <div className="flex-grow-1">
                       <div className="fw-bold text-truncate">
                         {notification.senderName}
-                        {notification.isRealTime && (
-                          <span className="badge bg-success ms-1" style={{ fontSize: "0.6em" }}>
-                            Live
-                          </span>
-                        )}
                       </div>
                       <div className="text-muted small">
                         {notification.message}
