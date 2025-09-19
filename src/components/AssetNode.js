@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import AvgStatsIcon from './AvgStatsIcon';
 
 function AssetNode({ node, refreshHierarchy, searchTerm, fetchTotalAssets }) {
   const navigate = useNavigate();
@@ -490,6 +491,8 @@ function AssetNode({ node, refreshHierarchy, searchTerm, fetchTotalAssets }) {
               onMouseLeave={(e) => e.target.style.opacity = '0.2'}
             />
           )}
+
+          {userRole === "Admin" && <AvgStatsIcon nodeId = {node.id}/>}
         </div>
 
         {hasChildren && expanded && (

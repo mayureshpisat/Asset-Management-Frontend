@@ -65,13 +65,13 @@ export const NotificationProvider = ({ children }) => {
           // Show toast
           switch (notification.type) {
             case "SignalAdded":
-              toast.info(`${notification.user} added signal ${notification.name} under ${notification.parent}`);
+              toast.info(`${notification.user} added signal ${notification.name} under ${notification.parentName}`);
               break;
             case "SignalDeleted":
-              toast.info(`${notification.user} deleted signal ${notification.name} under ${notification.parent}`);
+              toast.info(`${notification.user} deleted signal ${notification.name} under ${notification.parentName}`);
               break;
             case "SignalUpdated":
-              toast.info(`${notification.user} updated signal ${notification.oldName} to ${notification.newName} under ${notification.parent}`);
+              toast.info(`${notification.user} updated signal ${notification.oldName} to ${notification.newName} under ${notification.parentName}`);
               break;
             default:
               break;
@@ -109,6 +109,9 @@ export const NotificationProvider = ({ children }) => {
             case "AssetUpdated":
               toast.info(`${notification.user} updated asset ${notification.oldName} to ${notification.newName}`);
               break;
+            case "AssetReorder":
+              toast.info(`${notification.user} reordered the hierarchy`);
+              break;
             default:
               break;
           }
@@ -118,6 +121,10 @@ export const NotificationProvider = ({ children }) => {
             fetchStoredNotifications();
           }
         });
+
+        newConnection.on("RecieveStatsNotification", (tempAvg, powerAvg)=>{
+          toast.info(`Average temperature for this asset is ${tempAvg} and average power consumed for this asset is ${powerAvg}`)
+        })
 
       } catch (error) {
         console.error("Error setting up SignalR connection:", error);
